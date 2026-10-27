@@ -76,7 +76,7 @@ discovery_contrasts:
 discovery_candidate_ranking:
   lock_path: "config/discovery_candidate_ranking_lock.json"
   lock_sha256: "791249e40ec9cc677e2e03051dd7bc7aca95fbe8f7de294db0e85fcd35785d52"
-  script_path: "scripts/osa_discovery_candidate_ranking.py"
+  script_path: "scripts/discovery/osa_discovery_candidate_ranking.py"
   script_sha256: "7ed0e502fa254f640701f8aad323b7e1112da1bfb887a61dfb860803f69a2170"
   input_stage: "results/discovery_preprocess_v2/04_discovery_v2"
   adult_OSA_axis: "0.50*OSA_strength + 0.25*severe_strength + 0.25*AHI_strength"
@@ -154,7 +154,7 @@ pair_context_ranking:
   status: "DISCOVERY_ONLY_LOCAL_PREVIEW_PASS; SERVER_PYTHON37_RUN_PENDING"
   lock_path: "config/osa_pair_context_ranking_lock.json"
   lock_sha256: "b855a6aedffbc8fba16f677e3fce01e3ccc63b10e724fcda26e5517b980d15e9"
-  script_path: "scripts/osa_pair_context_ranking.py"
+  script_path: "scripts/discovery/osa_pair_context_ranking.py"
   script_sha256: "674117dfed315265779177610076c6fd3000bb0652788b9faced9b3c9685643a"
   protein_universe: 250
   unordered_pair_universe: 31125

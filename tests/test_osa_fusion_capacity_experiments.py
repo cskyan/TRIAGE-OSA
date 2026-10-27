@@ -264,10 +264,10 @@ class FusionCapacityExperimentTests(unittest.TestCase):
                 experiment.BASE + "/13_adipose_validation_preprocess_v1/candidate_adipose_evidence.tsv",
                 "model/osa_adapter/osa_fusion_capacity_experiments.py",
                 "model/osa_adapter/osa_external_strong_controls.py",
-                "scripts/osa_cpap_reversal_endpoint.py",
-                "scripts/osa_cpap_subject_signflip.py",
-                "scripts/osa_independent_validation.py",
-                "scripts/osa_adipose_cross_tissue_endpoint.py"]
+                "scripts/validation/osa_cpap_reversal_endpoint.py",
+                "scripts/validation/osa_cpap_subject_signflip.py",
+                "scripts/validation/osa_independent_validation.py",
+                "scripts/validation/osa_adipose_cross_tissue_endpoint.py"]
             for cohort in ("GSE133601", "GSE49800"):
                 relative_files += [experiment.BASE + "/10_cpap_validation_preprocess_v1/" + cohort + "/" + name
                     for name in ("candidate_validation_evidence.tsv", "candidate_participant_deltas.tsv.gz")]

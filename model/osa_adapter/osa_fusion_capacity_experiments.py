@@ -324,7 +324,7 @@ def external_source_files(root):
     # Normalize before recording project-relative provenance names.
     script_path = Path(__file__).resolve()
     required += [script_path, script_path.with_name("osa_external_strong_controls.py")]
-    required += [root/"scripts"/name for name in ("osa_cpap_reversal_endpoint.py",
+    required += [root/"scripts/validation"/name for name in ("osa_cpap_reversal_endpoint.py",
         "osa_cpap_subject_signflip.py", "osa_independent_validation.py", "osa_adipose_cross_tissue_endpoint.py")]
     missing = [str(p) for p in required if not p.is_file()]
     if missing:
@@ -624,7 +624,7 @@ def parse_args():
 def main():
     args=parse_args()
     root=Path(args.root).resolve()
-    sys.path.insert(0,str(root/"scripts"))
+    sys.path.insert(0,str(Path(__file__).resolve().parents[2]/"scripts/validation"))
     config_path=resolve(root,args.config)
     config=read_json(config_path)
     if args.smoke:

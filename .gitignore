@@ -35,3 +35,5 @@ tmp/
 !examples/candidate_evidence/data/**
 !plotting/data/
 !plotting/data/**
+!scripts/data/
+!scripts/data/**

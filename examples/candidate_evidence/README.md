@@ -13,7 +13,7 @@ The four TSV files in `data/` are unchanged aggregate tables from the manuscript
 - `03_original_modules.tsv`: the three original modules and their 17 proteins.
 - `14_nine_axis_data_dictionary.tsv`: the archived evidence-axis summary.
 
-Checksums are recorded in `docs/source_manifest.json`. The example does not change the source data or recompute the original rankings.
+Checksums are recorded in `config/source_checksums.json`. The example does not change the source data or recompute the original rankings.
 
 ## Run
 
@@ -33,7 +33,7 @@ Each row is one original candidate edge. The four columns give its absolute rank
 
 `candidate_summary.tsv` joins the ranks with selection-rule indicators. In particular, inclusion in the original shortlist does not imply inclusion after direction filtering. Evidence axes can share participants and should not be counted as independent replication cohorts. The module table describes the original shortlist, not a claim of new physical protein interactions.
 
-This small example demonstrates result traceability and plotting. It is not an end-to-end training example; that workflow requires the resources in `docs/INPUTS.md`.
+This small example demonstrates result traceability and plotting. It is not an end-to-end training example; that workflow requires the resources listed in the [root README](../../README.md#required-inputs).
 
 ## Reference output
 

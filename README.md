@@ -14,19 +14,22 @@ model/
   triage_server_candidate/      Checkpoint-compatible molecular backbone
   osa_adapter/                 OSA context, specialization, inference and controls
   osa_public_multimodal/       Additional participant-profile analyses
-scripts/                       Preprocessing and external evidence analyses
+scripts/
+  data/                        Public-data downloads and manifest preparation
+  discovery/                   Discovery QC, statistics, mapping and rankings
+  validation/                  Treatment, tissue, cell and proteomic evidence
+  candidates/                  Candidate stability, sensitivity and pathway analyses
+  checks/                      Structural-source checks
+  experiments/                 Linux launcher for the fusion-capacity controls
 config/                        Versioned analysis and training contracts
 pathway_module_layer/          Discovery pathway and module analyses
 plotting/
-  manuscript/                  Benchmark, biological and supplementary plot builders
+  figures/                     All statistical figure builders
   data/                        Small archived aggregate figure tables
-  qa/                          Figure alignment checker
 examples/candidate_evidence/   Complete 15-edge candidate example
 tests/                         Regression tests using explicit test fixtures
 tools/                         Repository integrity checks
-docs/                          Workflow, input and provenance documentation
 source_data/                   Supplementary Data 1 and 2, checksums and file guide
-third_party/                   Notices for the bundled QA helper
 ```
 
 ## Quick start: one complete example
@@ -71,7 +74,7 @@ python run.py test
 
 Three longitudinal integration checks need the archived cohort metadata/design and report an explicit skip when those inputs are absent. To include them, use `python run.py --data-root /path/to/data_workspace test`. The remaining tests are self-contained.
 
-Choose the PyTorch build appropriate for your platform. CUDA inference requires a compatible driver and CUDA-enabled PyTorch build. Dependency ranges above are installation requirements, not an exact historical environment lock. The local verification environment is recorded in `docs/verification.json` after testing.
+Choose the PyTorch build appropriate for your platform. CUDA inference requires a compatible driver and CUDA-enabled PyTorch build. Dependency ranges above are installation requirements, not an exact historical environment lock.
 
 ## Data and weights
 
@@ -94,7 +97,7 @@ python run.py --data-root /path/to/data_workspace plot published
 
 Replace the example path with your own directory. It must include the relevant `config/`, `metadata/` and result-stage inputs; `--data-root` does not copy them. For individual preprocessing stages, pass their native `--root` option after the stage name where supported. Inspect `--help` first. Legacy plot builders use their original repository-relative layouts.
 
-The backbone's portable default assets live below `resources/backbone/`, benchmark resources below `resources/benchmark_data/`, and ESM weights below `resources/esm/`. Explicit native CLI options override supported defaults. See [required inputs](docs/INPUTS.md).
+The backbone's portable default assets live below `resources/backbone/`, benchmark resources below `resources/benchmark_data/`, and ESM weights below `resources/esm/`. Explicit native CLI options override supported defaults. See [required inputs](#required-inputs).
 
 ## Data sources and download links
 
@@ -137,7 +140,7 @@ python run.py stage downloads --root . --list
 python run.py stage downloads --help
 ```
 
-The catalog is in `scripts/osa_geo_server_pipeline.py`; longitudinal GSE283703 downloads are implemented separately in `scripts/osa_independent_validation.py`. Proteomic evidence follows its own preparation workflow. The catalog is not a single command that prepares all study inputs. Most GEO files are placed under `geo/` and platform annotations under `annotations/`.
+The catalog is in `scripts/data/osa_geo_server_pipeline.py`; longitudinal GSE283703 downloads are implemented separately in `scripts/validation/osa_independent_validation.py`. Proteomic evidence follows its own preparation workflow. The catalog is not a single command that prepares all study inputs. Most GEO files are placed under `geo/` and platform annotations under `annotations/`.
 
 ### Identifier, pathway and interaction references
 
@@ -150,7 +153,28 @@ The catalog is in `scripts/osa_geo_server_pipeline.py`; longitudinal GSE283703 d
 | Complex Portal | [Complex Portal](https://www.ebi.ac.uk/complexportal/) | Curated human complex-membership evidence. The access records are specified with IntAct in `config/osa_known_ppi_complex_lock.json`. |
 | PDB and SIFTS | [RCSB PDB](https://www.rcsb.org/), [SIFTS](https://www.ebi.ac.uk/pdbe/docs/sifts/) | Structural examples and structure-to-sequence residue correspondence. Mapping requires the actual inference sequence and saved score indices, not only a matching protein name. |
 
-Public databases may change. Keep the downloaded release, retrieval date and checksum together with each analysis manifest rather than silently replacing archived references with the current release. Original data remain subject to their providers' terms. The GEO/ProteomeXchange accessions above identify study sources; the sample selections, pairing tables, processed inputs and model weights needed for exact reproduction are separate deliverables described in [INPUTS.md](docs/INPUTS.md).
+Public databases may change. Keep the downloaded release, retrieval date and checksum together with each analysis manifest rather than silently replacing archived references with the current release. Original data remain subject to their providers' terms. The GEO/ProteomeXchange accessions above identify study sources; exact sample selections, pairing tables, processed inputs and model weights are also required for reproduction.
+
+## Required inputs
+
+Keep these relative paths within the selected data workspace:
+
+```text
+config/                          Versioned contracts from this repository
+metadata/                        Sample, assay, participant and pairing manifests
+geo/                             GEO matrices, raw archives and study metadata
+annotations/                     Platform and identifier mapping files
+raw/                             Deposited files expected by each analysis
+resources/                       ESM, reference and backbone assets
+results/discovery_preprocess_v2/  Discovery and external analysis outputs
+pathway_module_layer/genesets/    Versioned pathway GMT files
+```
+
+`--root` locates the workspace; it does not create missing metadata or copy configurations. Use each stage's `--help` and its analysis contract for the required files. Sample-to-participant mappings, phenotype fields, availability indicators and treatment timepoints must match the archived cohort selection. Preserve paired designs and the shared-participant identifiers of the two adipose tissue views.
+
+Molecular inference needs ESM weights/embeddings and a checkpoint compatible with `model/triage_server_candidate/`. OSA training additionally needs the starting checkpoint identified in `config/triage_osa_training_lock_v4.json` and complete molecular pair outputs. The resource paths are placeholders, not distributed weights; checkpoint identity checks remain enabled. Use supported resource overrides when loading checkpoints whose serialized configuration contains old paths.
+
+The two source-data archives contain derived outputs, not all training inputs. External comparisons require prepared cohort matrices and complete rankings; stability analyses require the per-run predictions; pathway analyses require the recorded gene-set snapshot. Weight download links are not included in this release.
 
 ## Main experiments
 
@@ -166,18 +190,50 @@ Public databases may change. Keep the downloaded release, retrieval date and che
 | `stage shortlist-sensitivity` | Sensitivity to evidence-selection rules |
 | `stage cpap-endpoint` | Paired treatment-associated molecular reversal |
 
-The workflow order and input dependencies are described in [WORKFLOWS.md](docs/WORKFLOWS.md). These commands are not a request to rerun every experiment automatically. The launcher has no all-experiments command that could silently start long jobs.
+Run discovery processing in this order: downloads and manifests, QC, differential analysis, identifier mapping, candidate-universe selection, sequence/model-input preparation, both-order pair inference, and OSA training/prediction. Generate complete discovery rankings before external assessment. Stage names are available with `python run.py list`; native arguments are available with `python run.py stage NAME --help`.
+
+The common external protocol compares Full, constrained static fusion and direct anchor separately from the published-signature comparison. Cross-participant outputs can be evaluated with `--comparison-ranking results/discovery_preprocess_v2/39_cross_participant_adaptation_v1`; the published-signature comparison also accepts `--comparison-method Full`. These commands require the completed run and its manifests, not merely a directory with that name.
+
+Some archived ablation values are aggregate result summaries. The supported trainer variants define executable recipes; a table alone does not establish the availability of the original training implementation. No launcher command silently starts every experiment.
+
+### Fusion-capacity controls
+
+Stage 50 compares equal-input, parameter-matched, same-start and wider MLP controls. The common-objective `Full` is distinct from the original-objective `Native_full` reference. Model selection uses discovery validation; external evaluation is separate.
+
+```bash
+python run.py stage fusion-capacity --check-env --device cpu
+python run.py stage fusion-capacity --smoke --device cpu
+python run.py stage fusion-capacity --device cuda:0 --resume
+python run.py stage fusion-capacity --external-only --resume
+```
+
+These commands require the archived Stage 31 fold inputs/checkpoints, Stage 38 ranking background and expression inputs specified in `config/osa_fusion_capacity_control_v1.json`. Smoke mode checks execution and is not a formal experiment. `--resume` verifies existing contracts and output fingerprints. Place a stage's `--root` after its name when using a separate data workspace.
+
+On Linux, use `bash scripts/experiments/run_osa_fusion_capacity_controls.sh check`, `smoke` or `formal`. It defaults to CPU; set `OSA_DEVICE=cuda:0` and `CUDA_VISIBLE_DEVICES` explicitly for GPU use. `OSA_PYTHON` selects the interpreter. The launcher records progress in `logs/`.
 
 ## Figures
 
 `python run.py plot benchmark` regenerates the benchmark and ablation figures from bundled aggregate tables. It retains the current **Combined molecular weight** label. `python run.py example` produces the independent candidate-rank example.
 
-Other plot builders require their archived result tables. They are included as source workflows, not as a promise that all manuscript panels can be recreated from this small repository alone. Original figure numbers may reflect the figure-builder version rather than the final manuscript numbering. Hand-drawn framework diagrams and PyMOL sessions are not reconstructed by these statistical plotting scripts. See [PLOTTING.md](docs/PLOTTING.md).
+All plotting code is collected under `plotting/figures/` and selected through `python run.py plot NAME`:
+
+| Name | Required inputs |
+|---|---|
+| `candidate` | Bundled 15-edge candidate example |
+| `benchmark` | Bundled benchmark/ablation JSON and control TSV |
+| `fusion-capacity` | `Fusion_Control_Source_Data/` from Supplementary Data 2 |
+| `published` | Archived Stage 36 v2 comparisons |
+| `bio` | Biological-analysis results and metadata |
+| `coverage` | Cohort metadata and coverage outputs |
+| `supp` | Supplementary control/evidence results |
+| `v4`, `legacy` | Earlier versioned result trees |
+
+For extraction and plotting commands, see the [source-data guide](source_data/README.md). Plotting reads completed results without retraining. Original figure IDs can precede final manuscript renumbering or manual layout revisions. Framework slides and PyMOL sessions are not reconstructed by these statistical builders. The candidate example exports PDF, SVG and 600-dpi PNG.
 
 ## Reproducibility and release status
 
-This repository packages the study's code and archived supporting outputs. Machine-specific defaults and non-English commentary were cleaned in a release copy; model tensor calculations, parameter keys, archived numerical values and existing checkpoint identity checks were retained. The original research workspace was not modified. Long-running training and cohort analyses require the external inputs listed in [INPUTS.md](docs/INPUTS.md).
+This repository packages the study's code and archived supporting outputs. Model calculations, parameter keys, archived numerical values and checkpoint identity checks are retained. Long-running training and cohort analyses require the external inputs listed above.
 
-`docs/source_manifest.json` records source checksums. `model/triage_server_candidate/source_manifest.json` distinguishes the original runtime hashes from the portable copy. Unit tests use test fixtures; their passing does not establish clinical validity or reproduce the full training runs.
+`config/source_checksums.json` records source checksums. `model/triage_server_candidate/source_manifest.json` distinguishes the original runtime hashes from the portable copy. Unit tests use test fixtures; their passing does not establish clinical validity or reproduce the full training runs.
 
-The existing repository [Apache-2.0 license](LICENSE) is retained. Third-party resources remain subject to their original terms; the bundled alignment helper has its notice in `third_party/`. No publication DOI is assigned here. Checkpoint download links are not provided in this snapshot; the included CPU example and source-data plotting workflow do not require checkpoints.
+The repository uses the [Apache-2.0 license](LICENSE). External datasets and resources remain subject to their providers' terms. The included CPU example and source-data plotting workflow do not require checkpoints.

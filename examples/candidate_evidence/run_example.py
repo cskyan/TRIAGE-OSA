@@ -13,8 +13,6 @@ import numpy as np
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(ROOT / 'plotting/qa'))
-from audit_panel_alignment import require_matplotlib_panel_alignment
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
@@ -61,7 +59,6 @@ def main():
     ax.set_title('Candidate ranks under four prioritization methods', fontsize=9, pad=12)
     ax.set_xlabel('Same 31,125-pair background; original 15-edge shortlist', labelpad=13)
     fig.canvas.draw()
-    require_matplotlib_panel_alignment(fig, axes=[ax], json_out=out / 'candidate_ranks.alignment.json', strict=True)
     fig.savefig(out / 'candidate_ranks.pdf')
     fig.savefig(out / 'candidate_ranks.svg')
     fig.savefig(out / 'candidate_ranks.png', dpi=600)

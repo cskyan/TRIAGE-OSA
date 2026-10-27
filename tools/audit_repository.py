@@ -39,7 +39,7 @@ def main():
             except SyntaxError as exc:
                 problems.append(str(relative) + ': syntax: ' + str(exc))
         check_text(str(relative), text, problems)
-    manifest = ROOT / 'docs/source_manifest.json'
+    manifest = ROOT / 'config/source_checksums.json'
     for record in json.loads(manifest.read_text(encoding='utf-8'))['files']:
         path = ROOT / record['path']
         if not path.exists() or hashlib.sha256(path.read_bytes()).hexdigest() != record['portable_sha256']:

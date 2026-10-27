@@ -2,7 +2,7 @@
   "lock_version": "1.0.0",
   "locked_at_utc": "2026-08-09T06:44:12Z",
   "status": "POST_IMPLEMENTATION_PRE_FORMAL_LOCK",
-  "script_path": "scripts/osa_independent_validation.py",
+  "script_path": "scripts/validation/osa_independent_validation.py",
   "script_sha256": "2eb9f5b61c0a5ecfb29159d2691fcfdef46ae3a69a7bd1bdbff90258c248b8d1",
   "endpoint_lock_path": "config/osa_independent_validation_endpoint_lock.json",
   "endpoint_lock_sha256": "971b90a36c42c8873f6e901112ef747700b4d3df87818414a6e69082ea7ccfe9",

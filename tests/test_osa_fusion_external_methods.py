@@ -12,7 +12,7 @@ import numpy as np
 import pandas as pd
 
 PROJECT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(PROJECT / "scripts"))
+sys.path.insert(0, str(PROJECT / "scripts/validation"))
 sys.path.insert(0, str(PROJECT / "model" / "osa_adapter"))
 import osa_external_strong_controls as external
 import osa_cpap_reversal_endpoint as cp

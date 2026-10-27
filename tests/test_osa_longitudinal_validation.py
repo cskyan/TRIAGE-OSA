@@ -18,7 +18,7 @@ import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA_ROOT = Path(os.environ.get('OSA_DATA_ROOT', str(ROOT))).resolve()
-SCRIPT = ROOT / "scripts/osa_independent_validation.py"
+SCRIPT = ROOT / "scripts/validation/osa_independent_validation.py"
 SPEC = importlib.util.spec_from_file_location("osa_longitudinal_test_driver", str(SCRIPT))
 M = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(M)

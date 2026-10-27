@@ -10,7 +10,7 @@
   "previous_implementation_lock_sha256": "4959c2db199b97b553679fe1b07f1eee54bbb9e229a15b5e7b7bb0eca07b32d6",
   "v4_external_handoff": "config/triage_osa_external_validation_lock_v4.json",
   "v4_external_handoff_sha256": "83d81045e7dca7dbb0985f659677378b09b35dc505f6f01b37760161d1508cf2",
-  "script": "scripts/osa_independent_validation.py",
+  "script": "scripts/validation/osa_independent_validation.py",
   "script_sha256": "c842a272c88ca903051401da9494770f418c3ca643b439543aed9a61f769744c",
   "output_stage": "21_independent_validation_endpoint_triage_osa_v4",
   "adaptation_scope": [

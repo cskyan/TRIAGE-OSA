@@ -28,5 +28,22 @@ class ReleaseEntryPointTest(unittest.TestCase):
                 runner.main(['stage', 'not-a-stage'])
         call.assert_not_called()
 
+    def test_scripts_are_grouped_by_function(self):
+        self.assertEqual(list((ROOT / 'scripts').glob('*.py')), [])
+        for relative in runner.STAGES.values():
+            if relative.startswith('scripts/'):
+                self.assertEqual(len(Path(relative).parts), 3, relative)
+        for relative in runner.PLOTS.values():
+            self.assertTrue(relative.startswith(('plotting/figures/', 'examples/')), relative)
+
+    def test_launcher_preserves_environment_and_exposes_shared_modules(self):
+        with patch.dict(runner.os.environ, {'PYTHONPATH': 'existing_modules'}):
+            with patch.object(runner.subprocess, 'call', return_value=0) as call:
+                runner.main(['stage', 'cpap-preprocess', '--help'])
+        search_path = call.call_args[1]['env']['PYTHONPATH'].split(runner.os.pathsep)
+        self.assertIn(str(ROOT / 'scripts/discovery'), search_path)
+        self.assertIn(str(ROOT / 'scripts/validation'), search_path)
+        self.assertIn('existing_modules', search_path)
+
 if __name__ == '__main__':
     unittest.main()

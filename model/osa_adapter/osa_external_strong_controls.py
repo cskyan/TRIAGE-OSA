@@ -390,7 +390,7 @@ def regression_check(root, out):
 
 def run(args):
     root = Path(args.root).resolve()
-    sys.path.insert(0,str(root/"scripts"))
+    sys.path.insert(0,str(Path(__file__).resolve().parents[2]/"scripts/validation"))
     base = root / BASE
     comparison = getattr(args, 'comparison_ranking', None)
     ranking_source = None
