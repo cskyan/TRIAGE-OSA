@@ -1,0 +1,338 @@
+{
+  "date": "2026-10-15",
+  "platform": "Windows x86_64",
+  "plotting_environment": {
+    "python": "3.12.14",
+    "packages": {
+      "numpy": "2.5.3",
+      "pandas": "3.0.1",
+      "scipy": "1.18.1",
+      "matplotlib": "3.11.1",
+      "openpyxl": "3.1.5"
+    }
+  },
+  "model_test_environment": {
+    "python": "3.13.13",
+    "torch": "2.14.0+cpu",
+    "numpy": "2.5.2",
+    "pandas": "3.0.5",
+    "scipy": "1.18.0"
+  },
+  "unit_tests_without_archived_data": {
+    "run": 25,
+    "passed": 22,
+    "skipped_optional_integration": 3,
+    "failed": 0
+  },
+  "unit_tests_with_archived_design_data": {
+    "run": 25,
+    "passed": 25,
+    "skipped": 0,
+    "failed": 0,
+    "expression_values": "generated test fixtures; no formal endpoint recomputed"
+  },
+  "example": "PASS: all 15 archived candidate rows retained, 17 proteins, PDF/SVG/PNG and summary exported",
+  "benchmark_plot_builder": "PASS: main figures and seven individual panels exported",
+  "figure_pdf_checks": [
+    {
+      "file": "outputs/candidate_evidence/candidate_ranks.pdf",
+      "collision_exit": 0,
+      "text_exit": 0
+    },
+    {
+      "file": "outputs/figures/benchmark/figures/main/Fig3_Bernett_benchmark.pdf",
+      "collision_exit": 0,
+      "text_exit": 0
+    },
+    {
+      "file": "outputs/figures/benchmark/figures/main/Fig4_Two_level_ablation.pdf",
+      "collision_exit": 0,
+      "text_exit": 0
+    },
+    {
+      "file": "outputs/figures/benchmark/figures/panels/Fig3a.pdf",
+      "collision_exit": 0,
+      "text_exit": 0
+    },
+    {
+      "file": "outputs/figures/benchmark/figures/panels/Fig3b.pdf",
+      "collision_exit": 0,
+      "text_exit": 0
+    },
+    {
+      "file": "outputs/figures/benchmark/figures/panels/Fig3c.pdf",
+      "collision_exit": 0,
+      "text_exit": 0
+    },
+    {
+      "file": "outputs/figures/benchmark/figures/panels/Fig4a.pdf",
+      "collision_exit": 0,
+      "text_exit": 0
+    },
+    {
+      "file": "outputs/figures/benchmark/figures/panels/Fig4b.pdf",
+      "collision_exit": 0,
+      "text_exit": 0
+    },
+    {
+      "file": "outputs/figures/benchmark/figures/panels/Fig4c.pdf",
+      "collision_exit": 0,
+      "text_exit": 0
+    },
+    {
+      "file": "outputs/figures/benchmark/figures/panels/Fig4d.pdf",
+      "collision_exit": 0,
+      "text_exit": 0
+    }
+  ],
+  "visual_qa": "Candidate-rank example reviewed; all source rows and integer ranks present; no clipping. Single main plot area with separate colorbar.",
+  "source_preflight_warnings": "Example PNG is a preview, not a TIFF submission; static width-expression warning is a false positive (actual PDF width is 183 mm).",
+  "computational_ast_checks": [
+    {
+      "path": "model/osa_adapter/__init__.py",
+      "non_string_ast_unchanged": true
+    },
+    {
+      "path": "model/osa_adapter/audit_triage_assets.py",
+      "non_string_ast_unchanged": true
+    },
+    {
+      "path": "model/osa_adapter/build_osa_pair_registry.py",
+      "non_string_ast_unchanged": true
+    },
+    {
+      "path": "model/osa_adapter/osa_context_data.py",
+      "non_string_ast_unchanged": true
+    },
+    {
+      "path": "model/osa_adapter/osa_controlled_experiments.py",
+      "non_string_ast_unchanged": true
+    },
+    {
+      "path": "model/osa_adapter/osa_cross_participant_adaptation.py",
+      "non_string_ast_unchanged": true
+    },
+    {
+      "path": "model/osa_adapter/osa_external_strong_controls.py",
+      "non_string_ast_unchanged": true
+    },
+    {
+      "path": "model/osa_adapter/osa_published_comparison.py",
+      "non_string_ast_unchanged": true
+    },
+    {
+      "path": "model/osa_adapter/osa_triage_adapter.py",
+      "non_string_ast_unchanged": true
+    },
+    {
+      "path": "model/osa_adapter/predict_triage_osa.py",
+      "non_string_ast_unchanged": true
+    },
+    {
+      "path": "model/osa_adapter/prepare_osa_model_inputs.py",
+      "non_string_ast_unchanged": true
+    },
+    {
+      "path": "model/osa_adapter/run_osa_symmetric_inference.py",
+      "non_string_ast_unchanged": true
+    },
+    {
+      "path": "model/osa_adapter/train_triage_osa.py",
+      "non_string_ast_unchanged": true
+    },
+    {
+      "path": "model/osa_adapter/triage_osa_model.py",
+      "non_string_ast_unchanged": true
+    },
+    {
+      "path": "model/osa_public_multimodal/run_publication_experiments.py",
+      "non_string_ast_unchanged": true
+    },
+    {
+      "path": "model/triage_server_candidate/__init__.py",
+      "non_string_ast_unchanged": true
+    },
+    {
+      "path": "model/triage_server_candidate/compute_esm.py",
+      "non_string_ast_unchanged": true
+    },
+    {
+      "path": "model/triage_server_candidate/predict.py",
+      "non_string_ast_unchanged": true
+    },
+    {
+      "path": "model/triage_server_candidate/train_triage.py",
+      "non_string_ast_unchanged": true
+    },
+    {
+      "path": "model/triage_server_candidate/triage_config.py",
+      "non_string_ast_unchanged": true
+    },
+    {
+      "path": "model/triage_server_candidate/triage_losses.py",
+      "non_string_ast_unchanged": true
+    },
+    {
+      "path": "model/triage_server_candidate/triage_model.py",
+      "non_string_ast_unchanged": true
+    },
+    {
+      "path": "model/triage_server_candidate/tuna_diagnostics_utils.py",
+      "non_string_ast_unchanged": true
+    },
+    {
+      "path": "pathway_module_layer/scripts/_common.py",
+      "non_string_ast_unchanged": true
+    },
+    {
+      "path": "pathway_module_layer/scripts/run_all.py",
+      "non_string_ast_unchanged": true
+    },
+    {
+      "path": "pathway_module_layer/scripts/wp1a_pathway_activity.py",
+      "non_string_ast_unchanged": true
+    },
+    {
+      "path": "pathway_module_layer/scripts/wp1b_pathway_multi_axis.py",
+      "non_string_ast_unchanged": true
+    },
+    {
+      "path": "pathway_module_layer/scripts/wp2_module_classify.py",
+      "non_string_ast_unchanged": true
+    },
+    {
+      "path": "pathway_module_layer/scripts/wp3_pair_to_pathway.py",
+      "non_string_ast_unchanged": true
+    },
+    {
+      "path": "scripts/audit_osa_downloads.py",
+      "non_string_ast_unchanged": true
+    },
+    {
+      "path": "scripts/audit_osa_structure_provenance.py",
+      "non_string_ast_unchanged": true
+    },
+    {
+      "path": "scripts/build_manifest_source.py",
+      "non_string_ast_unchanged": true
+    },
+    {
+      "path": "scripts/check_candidate_selection_strength.py",
+      "non_string_ast_unchanged": true
+    },
+    {
+      "path": "scripts/osa_adipose_cross_tissue_endpoint.py",
+      "non_string_ast_unchanged": true
+    },
+    {
+      "path": "scripts/osa_adipose_validation_preprocess.py",
+      "non_string_ast_unchanged": true
+    },
+    {
+      "path": "scripts/osa_auc_protocol_diagnostic.py",
+      "non_string_ast_unchanged": true
+    },
+    {
+      "path": "scripts/osa_candidate_pathway_linkage.py",
+      "non_string_ast_unchanged": true
+    },
+    {
+      "path": "scripts/osa_complete_ranking_stability.py",
+      "non_string_ast_unchanged": true
+    },
+    {
+      "path": "scripts/osa_cpap_reversal_endpoint.py",
+      "non_string_ast_unchanged": true
+    },
+    {
+      "path": "scripts/osa_cpap_subject_signflip.py",
+      "non_string_ast_unchanged": true
+    },
+    {
+      "path": "scripts/osa_cpap_validation_preprocess.py",
+      "non_string_ast_unchanged": true
+    },
+    {
+      "path": "scripts/osa_direction_feasibility.py",
+      "non_string_ast_unchanged": true
+    },
+    {
+      "path": "scripts/osa_discovery_candidate_ranking.py",
+      "non_string_ast_unchanged": true
+    },
+    {
+      "path": "scripts/osa_discovery_differential.py",
+      "non_string_ast_unchanged": true
+    },
+    {
+      "path": "scripts/osa_discovery_identifier_mapping.py",
+      "non_string_ast_unchanged": true
+    },
+    {
+      "path": "scripts/osa_discovery_preprocess_qc.py",
+      "non_string_ast_unchanged": true
+    },
+    {
+      "path": "scripts/osa_geo_server_pipeline.py",
+      "non_string_ast_unchanged": true
+    },
+    {
+      "path": "scripts/osa_independent_validation.py",
+      "non_string_ast_unchanged": true
+    },
+    {
+      "path": "scripts/osa_known_ppi_complex_recovery.py",
+      "non_string_ast_unchanged": true
+    },
+    {
+      "path": "scripts/osa_known_ppi_reference_prepare.py",
+      "non_string_ast_unchanged": true
+    },
+    {
+      "path": "scripts/osa_pair_context_ranking.py",
+      "non_string_ast_unchanged": true
+    },
+    {
+      "path": "scripts/osa_pediatric_proteome_endpoint.py",
+      "non_string_ast_unchanged": true
+    },
+    {
+      "path": "scripts/osa_pediatric_proteome_preprocess.py",
+      "non_string_ast_unchanged": true
+    },
+    {
+      "path": "scripts/osa_public_evidence_closeout.py",
+      "non_string_ast_unchanged": true
+    },
+    {
+      "path": "scripts/osa_publication_figures.py",
+      "non_string_ast_unchanged": true
+    },
+    {
+      "path": "scripts/osa_representation_capacity_control.py",
+      "non_string_ast_unchanged": true
+    },
+    {
+      "path": "scripts/osa_scrna_cell_context_endpoint.py",
+      "non_string_ast_unchanged": true
+    },
+    {
+      "path": "scripts/osa_scrna_validation_preprocess.py",
+      "non_string_ast_unchanged": true
+    },
+    {
+      "path": "scripts/osa_shortlist_rule_sensitivity.py",
+      "non_string_ast_unchanged": true
+    },
+    {
+      "path": "scripts/osa_v4_publication_figures.py",
+      "non_string_ast_unchanged": true
+    },
+    {
+      "path": "scripts/verify_osa_downloads.py",
+      "non_string_ast_unchanged": true
+    }
+  ],
+  "scope": "Syntax, portability, test fixtures and plotting smoke checks; no new formal training or external study evaluation.",
+  "private_data_packaged": false
+}

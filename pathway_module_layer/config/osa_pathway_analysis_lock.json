@@ -1,0 +1,78 @@
+{
+  "schema_version": "1.0",
+  "project": "OSA_TRIAGE_Fuse_L1_L2_L3",
+  "layer": "pathway_module_layer",
+  "created_before_external_axes": true,
+  "stage": "discovery-only pathway module discovery (WP1-WP3)",
+  "discovery_datasets_allowed": ["GSE75097", "GSE71356"],
+  "forbidden_before_freeze": [
+    "GSE133601", "GSE49800", "GSE135917", "GSE214865", "PXD032734",
+    "IntAct", "Complex Portal"
+  ],
+  "gene_set_database": {
+    "primary_choice_required": "Hallmark OR Reactome (choose ONE, freeze it)",
+    "primary_gmt_path": "pathway_module_layer/genesets/PRIMARY.gmt",
+    "sensitivity_gmt_path": "pathway_module_layer/genesets/SENSITIVITY.gmt",
+    "id_space": "auto",
+    "rule": "do not switch databases after seeing results; sensitivity DB is only for robustness"
+  },
+  "wp1b_contrast_gsea": {
+    "method": "pre-ranked weighted-KS GSEA (Subramanian 2005), O(k) kernel",
+    "rank_metric": "signed_score",
+    "min_set_size": 10,
+    "max_set_size": 500,
+    "n_permutations": 1000,
+    "weight_exponent": 1.0,
+    "seed": 20260726,
+    "permutation_model": "size-matched random gene sets, per-(axis,set) seeded",
+    "multiple_testing": "Benjamini-Hochberg within each axis",
+    "discovery_axes": ["OSA", "severe", "AHI", "ordinal", "IH"],
+    "output_stage": "results/discovery_preprocess_v2/20_pathway_multi_axis_v1"
+  },
+  "wp1a_sample_activity": {
+    "method": "ssGSEA (Barbie 2009), range-normalised matrix",
+    "alpha": 0.25,
+    "id_map_source": "HGNC_ID from frozen differential tables",
+    "output_stage": "results/discovery_preprocess_v2/21_pathway_activity_v1",
+    "role": "sample-level activity for optional pathway-based prediction (plan P1)"
+  },
+  "wp2_module_classification": {
+    "p_nominal": 0.05,
+    "fdr_significant": 0.25,
+    "modules": ["IH_triggered", "OSA_sustained", "CPAP_reversible", "CPAP_persistent"],
+    "discovery_derivable": ["IH_triggered", "OSA_sustained"],
+    "external_required": ["CPAP_reversible", "CPAP_persistent"],
+    "evidence_levels": {
+      "A": ">=3 discovery axes direction-consistent",
+      "B": "2 axes consistent",
+      "C": "1 axis (OSA) only",
+      "D": "direction conflict or no significant axis"
+    },
+    "blinding_enforcement": "external CPAP/adipose/scRNA axes require --discovery-frozen-sha256 matching the frozen wp1b matrix",
+    "output_stage": "results/discovery_preprocess_v2/22_pathway_modules_v1"
+  },
+  "wp3_pair_to_pathway": {
+    "assignable_levels": ["A", "B", "C"],
+    "classes": ["within_pathway", "cross_pathway_bridge", "unassigned"],
+    "pairs_source": "results/discovery_preprocess_v2/09_pair_context_ranking_v1/top_primary_5pct.tsv",
+    "priority_bridge_types": [
+      "hypoxia<->inflammation",
+      "hypoxia<->oxidative_stress",
+      "inflammation<->complement_coag",
+      "metabolic<->vascular_endothelial",
+      "immune<->metabolic"
+    ],
+    "output_stage": "results/discovery_preprocess_v2/23_pair_to_pathway_v1"
+  },
+  "score_names": {
+    "p_PPI": "generic TRIAGE interaction feasibility (frozen upstream)",
+    "r_OSA": "discovery-only OSA context relevance (frozen upstream)",
+    "S_OSA-PPI": "OSA interaction-priority score; NOT a physical interaction probability"
+  },
+  "prohibited": [
+    "switching gene-set database after reading results",
+    "reading CPAP/adipose/scRNA/proteome/known-PPI before the discovery pathway matrix is frozen",
+    "calling S_OSA-PPI a physical interaction probability",
+    "modifying frozen candidates or the 250/500 pair universe from this layer"
+  ]
+}

@@ -1,0 +1,111 @@
+{
+  "schema_version": "3.1",
+  "locked_at": "2026-08-08",
+  "analysis_name": "TRIAGE-Fuse OSA reliability-adaptive specialization v3.1",
+  "purpose": "Learn pair-specific nonnegative fusion of frozen PPI, adaptive L1-L2-L3 and participant-isolated OSA context without a fixed expert mixture or global signal inversion.",
+  "base_model": {
+    "checkpoint": "results/discovery_preprocess_v2/06_model_training/esm_only_adaptation_v1/triage_tuna_esm_only_adapted.pt",
+    "checkpoint_sha256": "87a161435023070443c675ebab3539268f9537a8a925f782d081061e1a853a56",
+    "frozen_components": [
+      "L1 residue branch",
+      "L2 interface branch",
+      "L3 global branch",
+      "T-MEB base gates",
+      "all protein encoders"
+    ]
+  },
+  "allowed_training_data": [
+    "GSE75097 frozen primary discovery samples",
+    "GSE71356 frozen primary IH crossover samples",
+    "disease-independent frozen TRIAGE pair outputs"
+  ],
+  "forbidden_training_or_selection_data": [
+    "GSE133601",
+    "GSE49800",
+    "GSE135917",
+    "GSE214865",
+    "GSE38792",
+    "GSE293433",
+    "PXD032734",
+    "IntAct",
+    "ComplexPortal",
+    "all Stage 10-19 endpoints"
+  ],
+  "universe": {
+    "formal": "sensitivity_500",
+    "formal_proteins": 500,
+    "formal_pairs": 124750,
+    "primary_report_subset": "primary_250",
+    "candidate_membership_may_change": false
+  },
+  "cross_validation": {
+    "folds": 4,
+    "GSE75097": "deterministic stratified leave-one-fold-out context construction within PS, MSO and VSO",
+    "GSE71356": "leave-one-subject-out stability audit across four crossover subjects",
+    "protein_split": "deterministic accession-hash folds",
+    "train_val_test": "training, validation and test pairs are protein-disjoint; participant-held-out effects are audit-only and never gold labels",
+    "external_validation_used": false
+  },
+  "trainable_innovation": {
+    "context_conditioned_tri_level_gate": true,
+    "reliability_aware_residual": true,
+    "symmetric_pair_context": true,
+    "nonnegative_convex_expert_fusion": true,
+    "pair_adaptive_expert_gate": true,
+    "expert_order": ["frozen_PPI", "adaptive_L1_L2_L3", "OSA_context_anchor"],
+    "numerical_anti_collapse_floor_per_expert": 0.01,
+    "fixed_final_expert_mixture": false,
+    "minimum_mean_structural_mass_is_soft_regularization": true,
+    "minimum_each_L1_L2_L3_branch_weight": 0.10,
+    "global_signal_inversion_allowed": false,
+    "OSA_context_anchor": "0.75 * adult_state_severity_AHI + 0.25 * IH_or_neutral, combined symmetrically across both nodes",
+    "base_PPI_retention_distillation": true,
+    "physical_PPI_probability_claim": false
+  },
+  "optimization": {
+    "seed": 20260716,
+    "hidden_dimension": 32,
+    "dropout": 0.10,
+    "batch_size": 2048,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "max_epochs": 60,
+    "patience": 10,
+    "bce_weight": 1.0,
+    "ranking_weight": 0.25,
+    "PPI_retention_weight": 0.10,
+    "gate_drift_weight": 0.02,
+    "structural_mass_weight": 0.50,
+    "minimum_mean_structural_mass": 0.10,
+    "expert_entropy_weight": 0.02,
+    "minimum_expert_entropy_normalized": 0.20,
+    "minimum_ranking_target_gap": 0.10
+  },
+  "checkpoint_selection": "validation multi-axis utility on protein-disjoint pairs; weights are learned per pair and selected without external validation",
+  "performance_gate": {
+    "minimum_delta_test_Spearman_vs_frozen_PPI": 0.05,
+    "minimum_delta_test_weak_top20_AUPRC_vs_frozen_PPI": -0.01,
+    "minimum_test_top5_enrichment_ratio": 1.0,
+    "minimum_context_rank_preservation_delta": -0.10,
+    "minimum_structural_retention_gain_vs_context_only": 0.05,
+    "minimum_multi_axis_utility_gain_vs_best_single_baseline": 0.0,
+    "minimum_mean_structural_expert_mass": 0.10,
+    "required_internal_baselines": [
+      "frozen_TRIAGE_p_PPI",
+      "context_only_anchor",
+      "L3_only",
+      "equal_L1_L2_L3"
+    ],
+    "failed_checkpoint_is_selection_eligible": false
+  },
+  "final_epoch_rule": "median cross-validation best epoch; fixed before fitting all discovery data",
+  "required_outputs": [
+    "triage_osa_specialized.pt",
+    "cross_validation_metrics.tsv",
+    "participant_context_stability.tsv",
+    "internal_baseline_comparison.tsv",
+    "fold_assignments.tsv",
+    "training_contract.json",
+    "run_summary.json"
+  ]
+}

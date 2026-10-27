@@ -1,0 +1,120 @@
+{
+  "schema_version": "1.0",
+  "created_before_any_CPap_post_minus_pre_effect_was_computed": true,
+  "ranking_input": {
+    "path": "results/discovery_preprocess_v2/09_pair_context_ranking_v1/pair_context_scores.tsv.gz",
+    "sha256": "a31c08f64930c9412cd2d6b0f568f235eb53d4150f6ecff4a343843c72e2cf8a",
+    "pairs": 31125,
+    "ranking_frozen": true
+  },
+  "input_hashes": {
+    "GSE133601_series_matrix.txt.gz": "f87623896dbae8c4c0df32b7632a0d22dca90307bad0430b514733d7e6a19325",
+    "GSE49800_series_matrix.txt.gz": "47a9f7e96492f983edc8389184594d81166df603a88e2df5bc3faec7af3597af",
+    "GPL6244.annot.gz": "99ee70f87e02c75ff1c8dc57b6c40c0482c7ef2760e004301315ac34344ac6dc",
+    "sample_manifest.tsv": "ac911e17efcc41472b4d235bbf02d6758fe82a6f174b517df89c98e07a91bebd",
+    "candidate_proteins_primary_250.tsv": "90fd8420b22a4dbb155d7628858701a42c33bf70b76288322747ecb86030027d"
+  },
+  "cohorts": {
+    "GSE133601": {
+      "role": "validation_CPAP_1",
+      "subjects": 15,
+      "assays": 30,
+      "tissue": "PBMC",
+      "primary_input": "GEO deposited series matrix",
+      "preprocessing": "already log2 RMA normalized by depositors with Brainarray hugene10sthsentrezgcdf v16.0.0",
+      "feature_identifier": "Entrez Gene ID parsed from <Entrez>_at",
+      "raw_CEL_role": "optional technical sensitivity only; not required for the primary validation because the deposited matrix explicitly documents the exact frozen CDF and RMA procedure"
+    },
+    "GSE49800": {
+      "role": "validation_CPAP_2",
+      "subjects": 18,
+      "assays": 36,
+      "tissue": "PBL",
+      "primary_input": "GEO deposited RMA series matrix",
+      "preprocessing": "deterministic log2(value) because deposited positive RMA values are on a linear/exponentiated scale",
+      "feature_identifier": "GPL6244 Gene ID; exclude probes mapping to zero or multiple Entrez genes; aggregate multiple probes per Entrez by median after log2 transformation"
+    }
+  },
+  "sample_policy": {
+    "design": "paired post_CPAP minus pre_CPAP",
+    "model_equivalent": "subject fixed effect plus timepoint",
+    "primary_pairs": "all 15 and all 18 complete manifest pairs",
+    "outcome_based_sample_exclusion_allowed": false,
+    "technical_outliers": "flag only in primary analysis; no automatic sample removal after outcome inspection"
+  },
+  "protein_statistics": {
+    "effect": "mean participant-level delta expression, post minus pre",
+    "unmoderated": "paired t statistic",
+    "primary_statistic": "limma-style empirical-Bayes moderated paired t using the same variance-prior implementation as discovery",
+    "multiple_testing": "BH-FDR within each cohort and mapped-feature universe",
+    "cohorts_may_be_merged_at_expression_level": false
+  },
+  "reversal_orientation": {
+    "discovery_direction": "sign of frozen GSE75097 OSA-control beta",
+    "oriented_beta": "-sign(OSA_beta) * CPAP_beta_post_minus_pre",
+    "oriented_moderated_t": "-sign(OSA_beta) * CPAP_moderated_t",
+    "positive_interpretation": "change opposite to discovery OSA direction",
+    "node_reversal_score": "midrank percentile of oriented_moderated_t among measurable primary candidate proteins in the cohort"
+  },
+  "pair_endpoint": {
+    "eligibility": "both nodes measurable in the cohort; never rerank after missingness",
+    "pair_reversal_support": "sqrt(node_reversal_score_A * node_reversal_score_B)",
+    "both_nodes_directionally_reversed": "oriented_beta_A > 0 and oriented_beta_B > 0",
+    "headline_top_fraction": 0.01,
+    "headline_top_count_in_frozen_universe": 312,
+    "primary_effect": "mean pair_reversal_support in frozen top 1% divided by mean support in all eligible frozen pairs",
+    "support_difference": "top 1% mean minus eligible-background mean",
+    "binary_secondary": "ratio of both-node reversal fraction in frozen top 1% to all eligible pairs",
+    "AUEC": "trapezoidal area of cumulative support enrichment difference over frozen rank fractions 0.005 through 0.05",
+    "fractions": [0.005, 0.01, 0.02, 0.05]
+  },
+  "frozen_ranking_family": [
+    "OSA_interaction_priority_rank",
+    "rank_p_PPI",
+    "rank_r_OSA",
+    "rank_baseline_L3_only",
+    "rank_baseline_L1_L2",
+    "rank_baseline_L1_L3",
+    "rank_baseline_L2_L3",
+    "rank_baseline_equal_L1_L2_L3",
+    "rank_priority_PPI25_context75",
+    "rank_priority_PPI75_context25",
+    "rank_priority_bidirectional_conservative"
+  ],
+  "permutation": {
+    "formal_iterations": 10000,
+    "development_iterations": 1000,
+    "seed": 20260715,
+    "primary_node_aware": "permute complete node reversal evidence vectors within deterministic blocks of 10 nearest nodes matched on frozen detection fraction and log2 protein length; recompute pair support on the unchanged pair graph",
+    "subject_aware": "random within-subject sign flips of paired delta vectors followed by refitting node and pair reversal evidence",
+    "pair_graph_rewiring": "not needed for the complete 250-node graph primary universe because every node degree is exactly 249; node-label permutation preserves node reuse and degree exactly",
+    "P_value": "(1 + number of permuted statistics at least as large as observed) / (iterations + 1)",
+    "validation_may_select_permutation_scheme": false
+  },
+  "meta_analysis": {
+    "cohorts_reported_separately": true,
+    "primary_pooling": "fixed-effect combination of cohort log enrichment ratios using permutation-estimated variance",
+    "direction_discordance": "if cohort enrichment directions disagree, report heterogeneity and do not claim pooled replication",
+    "raw_expression_values_may_be_merged": false
+  },
+  "negative_controls": [
+    "bottom 1% of the frozen primary ranking",
+    "random ranking under the node-aware null",
+    "OSA context shuffled among matched nodes",
+    "same-direction CPAP change rather than reversal",
+    "model order-gap and truncation strata reported without filtering the primary result"
+  ],
+  "multiplicity": {
+    "primary_confirmatory_family": "two cohort-specific top-1-percent enrichment tests plus prespecified meta-analysis",
+    "secondary_family": "AUEC, binary reversal, baselines, weight sensitivities and stability strata",
+    "adjustment": "BH-FDR within each reported secondary test family",
+    "effect_sizes_and_confidence_intervals_required": true
+  },
+  "prohibited": [
+    "changing candidate or pair membership",
+    "changing ranking weights, top fractions, endpoint orientation or permutation after viewing CPAP effects",
+    "selecting the better-looking CPAP cohort",
+    "merging GSE133601 and GSE49800 expression matrices",
+    "using validation results for model training, calibration or threshold selection"
+  ]
+}

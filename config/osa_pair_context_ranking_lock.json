@@ -1,0 +1,95 @@
+{
+  "schema_version": "1.0",
+  "created_before_validation": true,
+  "stage": "discovery-only OSA pair context and frozen primary ranking",
+  "input_hashes": {
+    "candidate_proteins_primary_250.tsv": "90fd8420b22a4dbb155d7628858701a42c33bf70b76288322747ecb86030027d",
+    "pair_registry_primary_250.tsv.gz": "e45a3137b7c0c279e8875d48924fe688755dd95c98a71808ba005aec8382ac8d",
+    "pair_scores.tsv.gz": "029f92a7a8dbf4181dcb102047ea5b2f6d219296674aca48e771df5be3ad6004",
+    "GSE75097_protein_expression_primary.tsv.gz": "d534ee4383d9202552e01d87e5c0248216689ca475c1653598dc290af9abe259",
+    "GSE71356_protein_expression_primary.tsv.gz": "c4651af5ccb4b29931072dd6c56fd7cb324c4250aaca6c50e51ee34a2756c3d2",
+    "GSE71356_primary_sample_metadata.tsv": "4a5a3df83d830a742b48bac45ad291bb1577c914f58a09caac7e52052cbeaef1"
+  },
+  "pair_universe": {
+    "proteins": 250,
+    "unordered_nonself_pairs": 31125,
+    "membership_may_change": false
+  },
+  "node_context": {
+    "source": "frozen discovery_score from GSE75097 OSA/severity/AHI plus GSE71356 IH evidence",
+    "node_formula": "0.75 * adult_OSA_axis + 0.25 * IH_strength_or_neutral",
+    "missing_IH_strength": 0.5,
+    "validation_or_known_PPI_allowed": false
+  },
+  "primary_pair_context": {
+    "name": "r_OSA",
+    "formula": "sqrt(discovery_score_A * discovery_score_B)",
+    "interpretation": "dual-node discovery context support; not a physical interaction probability",
+    "direction_coherence_changes_primary_score": false,
+    "coexpression_changes_primary_score": false,
+    "model_stability_diagnostics_change_primary_score": false
+  },
+  "percentile_transform": {
+    "formula": "midrank percentile within the frozen 31,125-pair universe: (average_rank - 0.5) / N",
+    "higher_is_better": true
+  },
+  "primary_priority": {
+    "name": "OSA interaction-priority score",
+    "formula": "percentile(p_PPI)^0.5 * percentile(r_OSA)^0.5",
+    "physical_interaction_probability": false,
+    "tie_breakers": [
+      "primary score descending",
+      "p_PPI descending",
+      "r_OSA descending",
+      "pair_id ascending"
+    ]
+  },
+  "weight_sensitivities": {
+    "PPI_25_context_75": "percentile(p_PPI)^0.25 * percentile(r_OSA)^0.75",
+    "PPI_75_context_25": "percentile(p_PPI)^0.75 * percentile(r_OSA)^0.25",
+    "validation_may_select_weight": false
+  },
+  "model_sensitivities": {
+    "bidirectional_conservative_PPI": "min(p_PPI_AB, p_PPI_BA); diagnostic sensitivity only and not calibrated",
+    "bidirectional_priority": "sqrt(percentile(bidirectional_conservative_PPI) * percentile(r_OSA))",
+    "order_gap_strata": [
+      "stable: gap < 0.25",
+      "moderate: 0.25 <= gap < 0.50",
+      "high: 0.50 <= gap < 0.75",
+      "very_high: gap >= 0.75"
+    ],
+    "order_gap_may_filter_primary_pairs": false,
+    "long_protein_multi_window": "separate later sensitivity; it cannot replace checkpoint-native primary inference"
+  },
+  "coexpression_diagnostics": {
+    "ranking_weight": 0.0,
+    "GSE75097": "Pearson correlation across the frozen 46 primary expression samples followed by global empirical-Bayes Fisher-z shrinkage",
+    "GSE71356": "subject-centered descriptive Pearson correlation across 16 crossover samples followed by global empirical-Bayes Fisher-z shrinkage",
+    "shrinkage": "tau2=max(var(off-diagonal Fisher z)-1/(n_eff-3),0); posterior factor=tau2/(tau2+1/(n_eff-3))",
+    "GSE75097_n_eff": 46,
+    "GSE71356_n_eff": 12,
+    "correlation_P_values_allowed": false,
+    "interpretation": "descriptive pair-context diagnostic only"
+  },
+  "posthoc_model_baselines": {
+    "L3_only": "p_L3",
+    "L1_L2": "sigmoid((contribution_L1 + contribution_L2) / (g_L1 + g_L2))",
+    "L1_L3": "sigmoid((contribution_L1 + contribution_L3) / (g_L1 + g_L3))",
+    "L2_L3": "sigmoid((contribution_L2 + contribution_L3) / (g_L2 + g_L3))",
+    "equal_L1_L2_L3": "sigmoid((logit_L1 + logit_L2 + logit_L3) / 3)",
+    "interpretation": "frozen post-hoc branch ablations; no retraining and no validation selection"
+  },
+  "frozen_top_sets": {
+    "headline_fraction": 0.01,
+    "AUEC_fraction_min": 0.005,
+    "AUEC_fraction_max": 0.05,
+    "reported_fractions": [0.005, 0.01, 0.02, 0.05, 0.10]
+  },
+  "prohibited": [
+    "reading CPAP, adipose, pediatric single-cell or proteome outcomes",
+    "reading known-PPI or pathway labels before ranking is frozen",
+    "calling r_OSA or the combined priority score a physical interaction probability",
+    "filtering the primary pair universe using direction, correlation, truncation, order gap or model coherence",
+    "changing formulas or weights after validation"
+  ]
+}

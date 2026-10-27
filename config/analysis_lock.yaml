@@ -1,0 +1,172 @@
+schema_version: "1.0"
+project: "OSA_TRIAGE_Fuse_L1_L2_L3"
+created_at_utc: "2026-07-13T17:13:40+00:00"
+script_version: "2.0.0"
+minimum_python: "3.7"
+project_root: "."
+source_audit:
+  path: "audit/osa_geo_audit_20260714-004604.json"
+  sha256: "db871084bb5214f0ca6a846fc67813542d7f2d1ce98b7ef44035de0cef7bddce"
+  selected: 16
+  passed: 16
+  failed: 0
+dataset_roles:
+  GSE75097: "discovery_OSA_state_severity"
+  GSE71356: "discovery_IH_anchor"
+  GSE133601: "validation_CPAP_1"
+  GSE49800: "validation_CPAP_2"
+  GSE135917: "cross_tissue_validation"
+  GSE214865: "external_single_cell"
+  PXD032734: "external_proteome"
+candidate_selection:
+  allowed_datasets: ["GSE75097", "GSE71356"]
+  forbidden_datasets: ["GSE133601", "GSE49800", "GSE135917", "GSE214865", "PXD032734"]
+  primary_protein_universe: 250
+  sensitivity_protein_universe: 500
+validation_blinding:
+  cpap_reversal_is_training_loss: false
+  validation_may_select_candidates: false
+  validation_may_tune_hyperparameters: false
+  validation_may_select_thresholds: false
+primary_endpoint:
+  name: "CPAP-reversal enrichment among frozen top-ranked protein pairs"
+  headline_top_fraction: 0.01
+  auec_top_fraction_range: [0.005, 0.05]
+  cohorts_separate_before_meta_analysis: true
+identifier_mapping:
+  final_pair_identifier: "reviewed canonical UniProt accession"
+  multi_gene_probe_primary: "exclude"
+  multiple_probes_per_gene_primary: "median_after_normalization"
+  isoforms_primary: "collapse_to_canonical"
+  mapping_lock_path: "config/identifier_mapping_lock.json"
+  hgnc_snapshot: "2026-07-14"
+  uniprot_release: "2026_02"
+  uniprot_release_date: "2026-06-10"
+model_boundaries:
+  p_PPI_and_r_OSA_reported_separately: true
+  disease_context_may_modify_L1_or_L2: false
+  combined_score_name: "OSA interaction-priority score"
+  combined_score_is_physical_interaction_probability: false
+known_gates:
+  GSE133601: "exact Brainarray v16 Entrez custom CDF required before raw-CEL RMA"
+  PXD032734: "verified TMT channel-to-subject/condition/plex/reference mapping required"
+raw_data_immutable: true
+cross_platform_expression_merge: false
+scRNA_statistical_unit: "participant"
+discovery_sample_freeze:
+  policy_path: "config/discovery_sample_freeze_policy.json"
+  GSE75097_primary_exclude: ["GSM1942596", "GSM1942597"]
+  GSE75097_sensitivity_restore_all: true
+  GSE71356_primary_retain_all_participants: true
+  GSE71356_sensitivity_exclude_complete_subject: "#403"
+  paired_design_single_assay_exclusion_forbidden: true
+discovery_contrasts:
+  lock_path: "config/discovery_contrast_lock.json"
+  lock_sha256: "3804ce24fe8ca3bbe2c237069afad7504290a6e4bd1c4a9f1de1f45471f31dec"
+  inference: "OLS with limma-style empirical-Bayes residual-variance moderation"
+  variance_prior_estimation: "standard un-winsorized log residual-variance method of moments"
+  unmoderated_ols_diagnostics_retained: true
+  amendment_from_v1: "Corrected naive log-variance clipping after audit found artificial prior_df boundary in GSE71356 sensitivities; no validation or candidate-selection result was used"
+  multiple_testing: "Benjamini-Hochberg within each contrast"
+  GSE75097_primary_covariates: "unadjusted registered estimand"
+  GSE75097_sensitivity_covariates: ["age_per_10y", "female", "technical_chip_batch"]
+  GSE71356_primary_design: "subject + exposure + time + exposure:time"
+  validation_data_allowed: false
+  candidate_ranking_in_phase4a: false
+discovery_candidate_ranking:
+  lock_path: "config/discovery_candidate_ranking_lock.json"
+  lock_sha256: "791249e40ec9cc677e2e03051dd7bc7aca95fbe8f7de294db0e85fcd35785d52"
+  script_path: "scripts/osa_discovery_candidate_ranking.py"
+  script_sha256: "7ed0e502fa254f640701f8aad323b7e1112da1bfb887a61dfb860803f69a2170"
+  input_stage: "results/discovery_preprocess_v2/04_discovery_v2"
+  adult_OSA_axis: "0.50*OSA_strength + 0.25*severe_strength + 0.25*AHI_strength"
+  discovery_score: "0.75*adult_OSA_axis + 0.25*IH_strength_or_neutral"
+  missing_IH_strength: 0.5
+  primary_candidate_count: 250
+  sensitivity_candidate_count: 500
+  validation_data_allowed: false
+  known_PPI_pathway_or_model_output_allowed: false
+  preliminary_control_matching: "1:1 expression/detection/length; final degree and L1-L2-L3 availability matching pending"
+  server_run_status: "PASS"
+  server_run_summary_sha256: "96d18a010f1d9dcfeeb07acdb07409caf61adea22bb4e9bcf38d140e91d31048"
+  ranking_all_sha256: "d0e586d2fe2501bc7146da80ebf72d12cefd504d61be0972caab52561ff2ac13"
+  primary_250_sha256: "90fd8420b22a4dbb155d7628858701a42c33bf70b76288322747ecb86030027d"
+  sensitivity_500_sha256: "24e5cc4fa6c8addf6676f695e5374ec76c53d896fae8625c5a31aaf9d8a1750f"
+  preliminary_controls_sha256: "836981ce7e4ddcc8de43a7bce1eec00f476d0de288eadf89ee0bc223d4096f40"
+  candidate_files_frozen: true
+  candidate_interpretation: "discovery evidence-prioritized; not FDR-significant DE proteins"
+triage_osa_adaptation:
+  status: "TUNA_ONLY_ESM_ADAPTED_CHECKPOINT_FROZEN; ASSET_AUDIT_PASS; PAIR_REGISTRY_FROZEN; PRIMARY_PAIR_INFERENCE_PENDING"
+  baseline_snapshot: "model/triage_base"
+  baseline_source_manifest: "model/triage_base/source_manifest.json"
+  baseline_source_manifest_sha256: "ba4b458fa1221633d10fb103c985fc3a4928301a3afbaaeef55e0071b36c6a53"
+  runtime_snapshot: "model/triage_server_candidate"
+  runtime_source_manifest: "model/triage_server_candidate/source_manifest.json"
+  runtime_source_manifest_sha256: "8c3938607ac506c74cc7f1bc21b36c16b1bc9004301b78d7df14b013a1dfd015"
+  model_contract: "config/osa_triage_model_contract.json"
+  model_contract_sha256: "c4180f26046681e6de02dbd87d05ac2932325efd08bcbd6e98c7b0eafe8e63a5"
+  core_invariants: "config/triage_fuse_core_invariants.json"
+  core_invariants_sha256: "e78ef49432a2f5c590efd9420e56fc57c80ee35fa97e72f99406015f71cfc88e"
+  paper_code_alignment: "TRIAGE_FUSE_PAPER_CODE_ALIGNMENT.md"
+  symmetric_adapter: "model/osa_adapter/osa_triage_adapter.py"
+  symmetric_adapter_sha256: "2f57eabc87f64dfbd81a7257d9b406bea0d00b89055ecbeb33d50d3ebd3f729e"
+  asset_audit_script: "model/osa_adapter/audit_triage_assets.py"
+  asset_audit_script_sha256: "15379da63a138f604cb094a1a8daef5d27eff3292c27d5843f39f997467037a2"
+  sequence_preparation_script: "model/osa_adapter/prepare_osa_model_inputs.py"
+  sequence_preparation_script_sha256: "710f8fe0ccea48bf7cb2a9c3f3f588889f0b0d334729578fc7e57ffde191580a"
+  feature_adaptation_script: "model/osa_adapter/train_osa_esm_only_adaptation.py"
+  feature_adaptation_script_sha256: "5c009c78e7b67c56e05187f473223f4ce6f44f68576eee72b41348c6ca5d6ce3"
+  feature_adaptation_base_checkpoint: "resources/backbone/triage_runs/tuna_from_engineering/triage_tuna_pair_finetuned.pt"
+  feature_adaptation_base_checkpoint_sha256: "2a59fc97f9ca94794c948de016d9ecbe6c97b8a06085e4f8c04336afd19f4ce7"
+  feature_adaptation_training_data: "original TUnA partitions only"
+  feature_adaptation_input_policy: "ESM2-650M present; PSSM/DSSP explicit zero channels; coordinates explicit NaN missing state"
+  feature_adaptation_output_checkpoint: "results/discovery_preprocess_v2/06_model_training/esm_only_adaptation_v1/triage_tuna_esm_only_adapted.pt"
+  feature_adaptation_selection_data: "protein-disjoint TUnA validation only; held-out protein-disjoint TUnA test reported after checkpoint selection"
+  feature_adaptation_split: "protein_disjoint; cross-partition pairs dropped; zero UID overlap required"
+  OSA_or_validation_data_allowed_during_feature_adaptation: false
+  server_ESM_npy_count: 750
+  primary_ESM_coverage: "250/250"
+  sensitivity_ESM_coverage: "500/500"
+  base_checkpoint_must_load_strictly: true
+  checkpoint_compatibility_order: ["triage_tuna_pair_finetuned.pt", "triage_topk_final.pt", "triage_final.pt"]
+  checkpoint_selection_may_use_OSA_validation: false
+  base_model_frozen_for_initial_OSA_analysis: true
+  A_B_order_policy: "average A-B and B-A logits before sigmoid"
+  native_trace_outputs_required: true
+  T_MEB_gate_simplex_and_reconstruction_smoke_test_required: true
+  primary_long_protein_policy: "explicit checkpoint-native N-terminal crop with audit flag"
+  multi_window_policy: "sensitivity only; must be registered before reading validation"
+  p_PPI_and_r_OSA_reported_separately: true
+  OSA_context_allowed_in_L1_or_L2: false
+  validation_data_allowed_for_model_or_feature_policy: false
+  pair_inference_lock: "config/osa_pair_inference_lock.json"
+  pair_inference_lock_sha256: "ab64209099ec0fbd8ef7c77d15efcb35a4db358f70f63b22c875016fa2b95437"
+  pair_registry_script: "model/osa_adapter/build_osa_pair_registry.py"
+  pair_registry_script_sha256: "5ab56c810916a8bd6eac1303999a25e81e8fe1c329afb61f8794fd8e312ca9b4"
+  primary_pair_registry_sha256: "e45a3137b7c0c279e8875d48924fe688755dd95c98a71808ba005aec8382ac8d"
+  sensitivity_pair_registry_sha256: "5c3c13cd85708ef8d3145dc807effd4723bffd015a8f5485f70e320d79a320c0"
+  primary_unordered_pair_count: 31125
+  sensitivity_unordered_pair_count: 124750
+  pair_inference_script: "model/osa_adapter/run_osa_symmetric_inference.py"
+  pair_inference_script_sha256: "cdd361cd23f089eeda5aaa37a5e6115ad83fb5a78f9c42b9d49faeb77bd0ed8f"
+  model_diagnostic_innovations_modify_p_PPI: false
+pair_context_ranking:
+  status: "DISCOVERY_ONLY_LOCAL_PREVIEW_PASS; SERVER_PYTHON37_RUN_PENDING"
+  lock_path: "config/osa_pair_context_ranking_lock.json"
+  lock_sha256: "b855a6aedffbc8fba16f677e3fce01e3ccc63b10e724fcda26e5517b980d15e9"
+  script_path: "scripts/osa_pair_context_ranking.py"
+  script_sha256: "674117dfed315265779177610076c6fd3000bb0652788b9faced9b3c9685643a"
+  protein_universe: 250
+  unordered_pair_universe: 31125
+  r_OSA_formula: "sqrt(discovery_score_A * discovery_score_B)"
+  primary_priority_formula: "sqrt(percentile(p_PPI) * percentile(r_OSA))"
+  primary_priority_name: "OSA interaction-priority score"
+  combined_score_is_physical_PPI_probability: false
+  validation_or_known_PPI_allowed_before_ranking_freeze: false
+  correlation_used_in_primary_ranking: false
+  direction_coherence_used_in_primary_ranking: false
+  model_stability_used_to_filter_primary_pairs: false
+  headline_top_fraction: 0.01
+  headline_top_pair_count: 312
+  weight_sensitivity_PPI_context: ["0.25/0.75", "0.75/0.25"]
+  validation_may_select_weight: false

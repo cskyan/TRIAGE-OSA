@@ -1,0 +1,32 @@
+{
+  "lock_version": "1.0.0",
+  "locked_at_utc": "2026-08-09T06:44:12Z",
+  "status": "POST_IMPLEMENTATION_PRE_FORMAL_LOCK",
+  "script_path": "scripts/osa_independent_validation.py",
+  "script_sha256": "2eb9f5b61c0a5ecfb29159d2691fcfdef46ae3a69a7bd1bdbff90258c248b8d1",
+  "endpoint_lock_path": "config/osa_independent_validation_endpoint_lock.json",
+  "endpoint_lock_sha256": "971b90a36c42c8873f6e901112ef747700b4d3df87818414a6e69082ea7ccfe9",
+  "first_complete_smoke": {
+    "run_summary_path": "results/discovery_preprocess_v2/21_independent_validation_endpoint_v1/smoke/run_summary.json",
+    "run_summary_sha256_before_implementation_lock": "7204d7c48605e9347087f4a0d4eaef951b1235d4fb8c4619be5c672d55104a5e",
+    "permutations": 50,
+    "status": "PASS_SMOKE",
+    "observed_GSE38792_full_top1_ratio": 1.061155448218887,
+    "observed_GSE38792_full_minus_context_top1_delta": 0.108154371602122,
+    "warning": "The 50-permutation smoke P values are implementation diagnostics and are not inferential results."
+  },
+  "post_first_smoke_changes": [
+    "replace Python-3.8-only math.comb with a Python-3.7-compatible exact combination implementation",
+    "implement the two prespecified exhaustive candidate-level label sensitivities",
+    "verify raw-input hashes and reproduce the observed candidate directional statistic before label enumeration",
+    "add this immutable implementation-hash gate"
+  ],
+  "post_first_smoke_endpoint_changes": false,
+  "formal_contract": {
+    "permutations": 10000,
+    "candidate_membership_changes_allowed": false,
+    "ranking_or_model_changes_allowed": false,
+    "pathway_or_comparator_changes_allowed": false,
+    "previous_validation_outcomes_allowed_for_selection": false
+  }
+}

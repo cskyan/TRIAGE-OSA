@@ -1,0 +1,91 @@
+{
+  "lock_version": "1.0.0",
+  "locked_at_utc": "2026-08-08T16:00:00Z",
+  "validation_results_viewed_before_lock": false,
+  "role": "untouched_independent_disease_state_validation",
+  "selection_allowed": false,
+  "input_hashes": {
+    "GSE38792_RAW.tar": "1ca28666f1cb35f62c0966370fb4d37fd2990510bd31e6f82a77817e4dac00ff",
+    "GSE38792_series_matrix.txt.gz": "7c6faeaaeac67547e1df62668388b1a1d29d7f05de857484e6e9b8e99271cd4f",
+    "GSE293433_processed_data_mRNA.xlsx": "6d976bd8881e7aaa55c2b53f9ecfb11611acc5a1171ad1bfa210bc6848765e5a",
+    "GSE293433_series_matrix.txt.gz": "9845979a3a05ac671eb199c230e4b7b229d81eba25d2b05fb597083f8653e0e9",
+    "GPL6244.annot.gz": "99ee70f87e02c75ff1c8dc57b6c40c0482c7ef2760e004301315ac34344ac6dc",
+    "hgnc_complete_set_20260714.tsv": "da14949c593bb28e9c136a636a0704d8892658c3b054a01cbccc53002e8e47ac",
+    "candidate_proteins_primary_250.tsv": "90fd8420b22a4dbb155d7628858701a42c33bf70b76288322747ecb86030027d",
+    "candidate_proteins_sensitivity_500.tsv": "24e5cc4fa6c8addf6676f695e5374ec76c53d896fae8625c5a31aaf9d8a1750f",
+    "osa_geo_audit_20260808-233455.json": "8ff02fff7e9fc7ad93bbf93e048e9df69b6745dfc84d0258ed8a950d75cd40bf"
+  },
+  "datasets": {
+    "GSE38792": {
+      "tissue": "visceral_adipose",
+      "platform": "GPL6244",
+      "controls": 8,
+      "OSA": 10,
+      "contrast": "OSA_minus_control",
+      "design": "intercept_plus_OSA_indicator",
+      "covariates": "none_available_at_participant_level",
+      "primary_input": "GEO_deposited_series_matrix",
+      "matrix_scale": "RMA_log2_already_normalized",
+      "additional_transform": "none",
+      "mapping": "retain GPL6244 probes with exactly one numeric Entrez Gene ID; aggregate multiple probes per Entrez by sample-wise median",
+      "raw_CEL_role": "integrity_and_future_technical_sensitivity_only"
+    },
+    "GSE293433": {
+      "tissue": "PBMC",
+      "platform": "GPL24676_Illumina_NovaSeq_6000",
+      "controls": 5,
+      "OSA": 5,
+      "contrast": "OSA_minus_control",
+      "design": "intercept_plus_OSA_indicator",
+      "covariates": "none_available_at_participant_level",
+      "primary_input": "GSE293433_processed_data_mRNA.xlsx",
+      "matrix_unit": "TPM_as_declared_in_GEO_sample_processing_metadata",
+      "transform": "log2_TPM_plus_1",
+      "primary_expression_filter": "TPM_at_least_1_in_at_least_2_of_10_samples",
+      "filter_sensitivity": [
+        "TPM_at_least_0.1_in_at_least_2_samples",
+        "TPM_at_least_1_in_at_least_3_samples"
+      ],
+      "identifier_rule": "retain rows whose name is a strict ENSG identifier with optional numeric version and whose ten sample cells are finite numeric values; strip Ensembl version before mapping",
+      "observed_structural_audit_before_outcome_analysis": {
+        "workbook_rows": 27301,
+        "strict_Ensembl_numeric_rows": 27292,
+        "malformed_footer_rows_excluded": 9,
+        "non_numeric_cells_in_excluded_rows": 90,
+        "workbook_column_order": ["S1", "S2", "S3", "S4", "S5", "Z1", "Z2", "Z3", "Z4", "Z5"],
+        "metadata_order": ["Z1", "Z2", "Z3", "Z4", "Z5", "S1", "S2", "S3", "S4", "S5"],
+        "alignment_rule": "join_by_library_name_never_by_column_position"
+      }
+    }
+  },
+  "statistics": {
+    "primary_statistic": "limma_style_empirical_Bayes_moderated_t_using_existing_discovery_variance_prior_implementation",
+    "unmoderated_statistics_retained": true,
+    "multiple_testing": "BH_FDR_within_each_dataset_mapped_tested_gene_universe",
+    "candidate_missingness": "explicit_not_imputed",
+    "cross_platform_merge": false
+  },
+  "sample_qc": {
+    "performed_without_group_outcomes": true,
+    "metrics": ["sample_median", "sample_MAD", "median_correlation_to_other_samples", "median_expression_robust_z"],
+    "outlier_flag": "absolute_median_expression_robust_z_greater_than_5",
+    "exclusion": "no_post_hoc_exclusion; all samples retained unless a prespecified nonfinite_or_identity_gate fails"
+  },
+  "candidate_coverage_observed_before_outcome_analysis": {
+    "GSE38792_primary_250": 236,
+    "GSE38792_sensitivity_500": 467,
+    "GSE293433_unfiltered_primary_250": 246,
+    "GSE293433_unfiltered_sensitivity_500": 491,
+    "GSE293433_primary_filter_primary_250": 204,
+    "GSE293433_primary_filter_sensitivity_500": 414
+  },
+  "prohibited": [
+    "using_either_dataset_for_training_checkpoint_selection_or_reranking",
+    "changing_sample_identity_expression_filter_mapping_or_contrast_after_viewing_group_effects",
+    "merging_microarray_and_RNAseq_expression_matrices",
+    "treating_TPM_as_raw_counts_or_running_count_based_negative_binomial_models",
+    "silently_removing_the_nine_malformed_workbook_footer_rows_without_an_audit_record",
+    "claiming_physical_PPI_validation_from_transcript_level_co_response"
+  ],
+  "next_gate": "blind_preprocessing_and_candidate_coverage_audit_only; frozen_pair_and_pathway_endpoints_require_a_separate_pre_result_lock"
+}

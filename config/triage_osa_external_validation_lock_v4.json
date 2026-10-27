@@ -1,0 +1,57 @@
+{
+  "schema_version": "4.0.0",
+  "status": "V4_FROZEN_FOR_EXTERNAL_VALIDATION",
+  "model": {
+    "name": "TRIAGE_Fuse_OSA_patient_information_v4",
+    "checkpoint": "results/discovery_preprocess_v2/06_model_training/triage_osa_patient_information_v4/triage_osa_specialized.pt",
+    "checkpoint_sha256": "9cd6055f38cc4c68a0c0ac40b99552ab5fed64ed941028a69d8af33ece05ebb0",
+    "training_lock": "config/triage_osa_training_lock_v4.json",
+    "training_lock_sha256": "ba886caa343bb4ee142555044e28a34555318fa0d7b5a987e55d0ede8a993f8e"
+  },
+  "ranking": {
+    "primary_250": "results/discovery_preprocess_v2/09_pair_context_ranking_triage_osa_v4/pair_context_scores_triage_osa_primary_250.tsv.gz",
+    "primary_250_sha256": "1e87e8ecaaf6d4a70ad89086237bcdc84633e5029d7f30efb0a0ccaadf6b03d3",
+    "sensitivity_500": "results/discovery_preprocess_v2/09_pair_context_ranking_triage_osa_v4/pair_context_scores_triage_osa_500.tsv.gz",
+    "sensitivity_500_sha256": "6810a21ecd0d9ea9149e8003c6edfd96080d0774c7ce4d76bc3ee9f09210fc29",
+    "run_summary": "results/discovery_preprocess_v2/09_pair_context_ranking_triage_osa_v4/run_summary.json",
+    "run_summary_sha256": "dc0910dabae008460b9373a8baa723577e67606a55daf4cb61415cb2d5afeb2e",
+    "native_primary_rank_field": "triage_osa_rank_primary_250",
+    "validation_compatibility_rank_field": "OSA_interaction_priority_rank",
+    "score_field": "triage_osa_score",
+    "proteins_primary": 250,
+    "pairs_primary": 31125,
+    "proteins_sensitivity": 500,
+    "pairs_sensitivity": 124750
+  },
+  "candidate_universe": {
+    "path": "results/discovery_preprocess_v2/04_candidates_v1/candidate_proteins_primary_250.tsv",
+    "sha256": "90fd8420b22a4dbb155d7628858701a42c33bf70b76288322747ecb86030027d",
+    "membership_frozen": true
+  },
+  "prespecified_endpoint_locks": {
+    "cpap": {"path": "config/osa_cpap_validation_lock.json", "sha256": "4779e5028ec5d9557ea22794f709528441b21b3bf100e69ef8f709f13c02a16d"},
+    "adipose": {"path": "config/osa_adipose_validation_lock.json", "sha256": "ddec7338f2aa4f8b1379b9861164d3df0d0667953df501001a2039cdf044d57a"},
+    "scrna": {"path": "config/osa_scrna_validation_lock.json", "sha256": "a668ea7e3cc0cda1db401a1239a59da9443c01a5c011a318940e2b0058ade3c4"},
+    "proteome": {"path": "config/osa_proteome_validation_lock.json", "sha256": "0bb352079c39d30f621b56e5cf294b5f7550848bccb1c316b25e3f19df6c00c6"},
+    "known_ppi_complex": {"path": "config/osa_known_ppi_complex_lock.json", "sha256": "756fcae13918382c85c7009bd956b06c9a142f20e8f3a254089fe9db63e765e4"}
+  },
+  "separation_policy": {
+    "external_validation_used_for_v4_training": false,
+    "external_validation_used_for_v4_checkpoint_selection": false,
+    "external_validation_used_for_candidate_selection": false,
+    "candidate_membership_changed": false,
+    "ranking_changed_during_v4_validation": false,
+    "patient_information_training_manifest_contains_external_rows": false,
+    "previous_v3_2_validation_outcomes_were_inspected_before_v4": true,
+    "v4_reanalysis_is_confirmatory": false,
+    "v4_reanalysis_role": "locked exploratory model-update comparison using unchanged endpoint definitions"
+  },
+  "new_output_stages": {
+    "cpap_reversal": "11_cpap_reversal_endpoint_triage_osa_v4",
+    "cpap_subject_signflip": "12_cpap_subject_signflip_triage_osa_v4",
+    "adipose": "14_adipose_cross_tissue_endpoint_triage_osa_v4",
+    "scrna": "16_scrna_cell_context_endpoint_triage_osa_v4",
+    "proteome": "18_pediatric_proteome_endpoint_triage_osa_v4",
+    "known_ppi_complex": "19_known_ppi_complex_recovery_triage_osa_v4"
+  }
+}

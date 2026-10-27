@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "synced_at_utc": "2026-07-15T07:27:00+00:00",
+  "role": "Portable copy of the checkpoint-compatible backbone runtime",
+  "immutable": false,
+  "OSA_changes_allowed_here": false,
+  "original_files": {
+    "triage_model.py": "b695c71851bcea33d37d58dc536a60657f2d4e37784116d9c6bd780c372833fa",
+    "predict.py": "4db62659f084ceb1a0c1593d72a276f6114cc452f96617d2542d9d2c8d4426a5",
+    "train_triage.py": "b43f37b367fbe608d4cf955430c7dc64443543c57a4b0fbbf68e4589f0f73cd8",
+    "triage_config.py": "d6bf17965c475b36d31247dcff9f0bcbaa10ff16969e53f5232efe800f148a2f",
+    "triage_losses.py": "ae96a6c5aab031871c7749c59d0d37edf8b10ad653404d1cb9f83b43ed7339f2",
+    "tuna_diagnostics_utils.py": "045107a07911314b4a09688ca5c3e33fac46cca7c24ed2bbcc8d974484b91935",
+    "compute_esm.py": "e2a052fe4a7f7ffe54a723eb46b8f604ccc5da562d168a1c814dd23f8baecad3"
+  },
+  "files": {
+    "compute_esm.py": "5afc257a250e83524ad4799041573e537257f07411ae24f202f700bb4f116857",
+    "predict.py": "9c6eb18070a289d8f3b17ebfa1f6157a62b933afb9ee59796fcf4322e5b6e941",
+    "train_triage.py": "b1b591e6b4371e440d2e6a45d8c7770e10fe160a6b74cf309e65424eaa7c1fa6",
+    "triage_config.py": "544d6b0e86637f881210c99e3b042edb68f79b590b52f6f8dd40732aba053419",
+    "triage_losses.py": "ae96a6c5aab031871c7749c59d0d37edf8b10ad653404d1cb9f83b43ed7339f2",
+    "triage_model.py": "fb79c2355497e5a6e2a4cdf443d1d1d49ab4466d57ee1b4d0deb4926a865fbd4",
+    "tuna_diagnostics_utils.py": "bfc7cb0b99943366be1c8fa1c864ddc020e618843f73d5d948dd17d7c254c57b",
+    "__init__.py": "986572fba4ad2fb4f122302992c8df63dc0695ba54dead907a237f017ed44891"
+  },
+  "portability_changes": "Local path defaults and comments only; parameter names and tensor calculations retained."
+}

@@ -1,0 +1,51 @@
+{
+  "schema_version": "1.0",
+  "created_at_utc": "2026-07-14T00:00:00+00:00",
+  "decision_basis": "Outcome-blind technical QC of independently normalized discovery microarrays; no differential-expression or validation outcome was inspected.",
+  "datasets": {
+    "GSE75097": {
+      "primary_set": "primary",
+      "analysis_sets": {
+        "primary": {
+          "description": "Primary discovery analysis excluding the two adjacent, extreme technical outliers on array 9249882091 positions K/L.",
+          "exclude_sample_ids": [
+            "GSM1942596",
+            "GSM1942597"
+          ],
+          "exclude_subject_ids": [],
+          "exclusion_reasons": {
+            "GSM1942596": "Extreme PCA and low all-probe inter-sample correlation; adjacent 9249882091K/L technical pair.",
+            "GSM1942597": "Extreme PCA and low all-probe inter-sample correlation; adjacent 9249882091K/L technical pair."
+          }
+        },
+        "sensitivity_all_48": {
+          "description": "Sensitivity analysis restoring all 48 samples.",
+          "exclude_sample_ids": [],
+          "exclude_subject_ids": [],
+          "exclusion_reasons": {}
+        }
+      }
+    },
+    "GSE71356": {
+      "primary_set": "primary",
+      "analysis_sets": {
+        "primary": {
+          "description": "Primary crossover analysis retains all four participants and all 16 assays; no single assay is removed from a paired participant block.",
+          "exclude_sample_ids": [],
+          "exclude_subject_ids": [],
+          "exclusion_reasons": {}
+        },
+        "sensitivity_exclude_subject_403": {
+          "description": "Participant-level sensitivity analysis excluding the complete four-assay block for subject #403.",
+          "exclude_sample_ids": [],
+          "exclude_subject_ids": [
+            "#403"
+          ],
+          "exclusion_reasons": {
+            "#403": "Two assays were PCA review flags; exclusion is participant-level to preserve the crossover design."
+          }
+        }
+      }
+    }
+  }
+}

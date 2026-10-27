@@ -1,0 +1,131 @@
+{
+  "lock_version": "1.0.0",
+  "locked_at_utc": "2026-07-15T00:00:00Z",
+  "dataset": "GSE214865",
+  "role": "held_out_pediatric_single_cell_validation",
+  "selection_allowed": false,
+  "validation_effects_viewed_before_lock": false,
+  "technical_metadata_audited_before_lock": true,
+  "technical_metadata_already_observed": {
+    "participants": 22,
+    "control_participants": 11,
+    "OSA_participants": 11,
+    "cellranger_filtered_cells_before_project_QC": 114409,
+    "features_per_sample": 36601,
+    "raw_10x_members": 66,
+    "author_cell_annotation_available": false
+  },
+  "input_hashes": {
+    "GSE214865_RAW.tar": "c95908f4e02a5a3774bb4d383e2904a259328cdd8955ffd9f8ed4c6ab8744277",
+    "sample_manifest.tsv": "ac911e17efcc41472b4d235bbf02d6758fe82a6f174b517df89c98e07a91bebd",
+    "dataset_registry.tsv": "cf76ddc79873976592e466444dbe101801c993e28b48352a918d0900976da319",
+    "candidate_proteins_primary_250.tsv": "90fd8420b22a4dbb155d7628858701a42c33bf70b76288322747ecb86030027d",
+    "pair_context_scores.tsv.gz": "a31c08f64930c9412cd2d6b0f568f235eb53d4150f6ecff4a343843c72e2cf8a"
+  },
+  "data_partition": {
+    "design": "11 pediatric OSA participants versus 11 pediatric controls",
+    "contrast": "OSA minus control",
+    "statistical_unit": "participant",
+    "pseudobulk_unit": "participant by prespecified cell lineage",
+    "cells_are_independent_replicates": false,
+    "covariates": "none; individual-level age, sex, BMI, and AHI are not available in the frozen local manifest",
+    "integration_role": "visualization or annotation diagnostics only; never the differential-expression sampling unit"
+  },
+  "technical_QC": {
+    "input": "CellRanger-filtered 10x matrix/features/barcodes triplets from GSE214865_RAW.tar",
+    "performed_per_participant": true,
+    "lower_detected_genes": 200,
+    "lower_total_UMI": 500,
+    "upper_detected_genes": 6000,
+    "upper_total_UMI": 50000,
+    "upper_mitochondrial_fraction": 0.20,
+    "doublet_policy": "fixed high-complexity exclusion proxy only; no outcome-dependent thresholding and no claim of complete doublet identification",
+    "ambient_RNA_policy": "marker ambiguity and unassigned labels are retained; no outcome-dependent ambient correction",
+    "sample_exclusion": "no participant is excluded after viewing disease effects; technical gate failure blocks formal endpoint execution",
+    "required_overall_technical_pass_fraction": 0.70,
+    "required_technical_pass_cells_per_participant": 1000
+  },
+  "annotation": {
+    "method": "deterministic normalized marker-module scoring without disease labels, candidate identities, or frozen pair ranks",
+    "normalization_for_annotation_only": "log1p(raw_count times 10000 divided by cell_total_UMI)",
+    "minimum_detected_markers": 2,
+    "minimum_top_module_score": 0.05,
+    "minimum_top_minus_second_score": 0.02,
+    "fine_types": [
+      "T",
+      "NK",
+      "B",
+      "Monocyte",
+      "Dendritic",
+      "Platelet",
+      "Unassigned"
+    ],
+    "primary_lineages": {
+      "T_NK": ["T", "NK"],
+      "B": ["B"],
+      "Myeloid": ["Monocyte", "Dendritic"]
+    },
+    "marker_modules": {
+      "T": ["CD3D", "CD3E", "TRBC1", "TRBC2", "LCK", "MAL"],
+      "NK": ["NKG7", "GNLY", "KLRD1", "PRF1", "XCL1", "XCL2"],
+      "B": ["MS4A1", "CD79A", "CD79B", "CD74", "CD37", "HLA-DRA"],
+      "Monocyte": ["LST1", "TYROBP", "FCER1G", "CTSS", "LILRB1", "LYZ"],
+      "Dendritic": ["FCER1A", "CD1C", "CLEC10A", "CST3", "GZMB", "JCHAIN"],
+      "Platelet": ["PF4", "PPBP", "NRGN", "RGS18", "GP9", "GNG11"]
+    },
+    "required_assigned_fraction_among_technical_pass": 0.70,
+    "interpretation": "primary broad lineages are used for formal validation; fine labels are secondary localization diagnostics and do not imply a reference-atlas-quality annotation"
+  },
+  "pseudobulk": {
+    "aggregation": "sum raw UMI counts within each participant and cell lineage",
+    "minimum_cells_per_participant_lineage": 30,
+    "primary_lineages_must_include_all_participants": true,
+    "library_normalization": "log2(CPM plus 0.5)",
+    "gene_filter": "CPM at least 1 in at least 5 eligible participants within the lineage",
+    "primary_model": "intercept plus OSA indicator on participant-level logCPM",
+    "primary_statistic": "limma-style empirical-Bayes moderated t using the frozen project implementation",
+    "unmoderated_statistics_retained": true,
+    "multiple_testing": "BH-FDR within each primary lineage",
+    "candidate_mapping": "exact version-stripped Ensembl gene identifier first; current gene symbol is audit-only fallback",
+    "minimum_participants_per_group": 8
+  },
+  "cell_context_endpoint": {
+    "candidate_universe": "frozen primary 250 proteins",
+    "pair_universe": "frozen 31,125 unordered primary pairs",
+    "discovery_orientation": "sign of frozen adult GSE75097 OSA-minus-control beta",
+    "node_score": "within-lineage midrank percentile of discovery-oriented pediatric moderated t among measurable frozen candidates",
+    "pair_score": "geometric mean of the two node scores",
+    "primary_omnibus": "mean top-minus-background pair support across T_NK, B, and Myeloid at the frozen top 1 percent",
+    "fractions": [0.005, 0.01, 0.02, 0.05],
+    "AUEC": "mean normalized trapezoidal area of top-minus-background support across the three primary lineages",
+    "lineage_specific_results": "secondary; report all prespecified lineages and BH-adjust across the three primary lineages",
+    "cell_type_localization": "external transcript-level cell-context support only; not physical PPI validation"
+  },
+  "randomization": {
+    "formal_iterations": 10000,
+    "development_iterations": 1000,
+    "seed": 20260715,
+    "primary_node_aware": "jointly permute each candidate's complete three-lineage evidence vector within deterministic blocks matched on pediatric detection and frozen protein length; preserve pair graph and frozen ranks",
+    "participant_label": "permute the complete 11 OSA and 11 control participant labels jointly across all primary lineages and recompute candidate and pair statistics",
+    "P_value": "(1 plus number of null statistics at least as large as observed) divided by (iterations plus 1)"
+  },
+  "stage_gates": {
+    "preprocess_PASS": [
+      "all input hashes pass",
+      "22 manifest participants match 22 complete 10x triplets",
+      "all samples share the same 36601-feature table",
+      "technical and annotation QC thresholds pass",
+      "each primary lineage has at least 30 cells in every participant",
+      "pseudobulk participant columns remain 11 control and 11 OSA"
+    ],
+    "endpoint_may_run_only_after_preprocess_PASS": true
+  },
+  "prohibited": [
+    "changing candidate or pair membership, frozen ranking, model weights, top fractions, annotation rules, QC thresholds, or endpoint orientation after viewing pediatric effects",
+    "using GSE214865 for training, calibration, threshold selection, checkpoint selection, early stopping, or model selection",
+    "treating individual cells as independent biological replicates",
+    "calling transcript co-localization physical protein interaction validation",
+    "selecting only the best-looking cell lineage",
+    "removing adult candidates because pediatric validation is absent or opposite"
+  ]
+}

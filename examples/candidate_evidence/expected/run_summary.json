@@ -1,0 +1,10 @@
+{
+  "candidate_edges": 15,
+  "candidate_proteins": 17,
+  "ranking_background_pairs": 31125,
+  "source_sha256": "b03cc096fc6182c2509009d8c86e4211c219cad9609cc44fd4b87dd4b517e55c",
+  "training_performed": false,
+  "ranking_recomputed": false,
+  "rows_excluded": 0,
+  "purpose": "Trace archived rankings and rule sensitivity, not validate physical interactions."
+}

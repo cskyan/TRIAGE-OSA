@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0",
+  "stage": "frozen disease-independent pair inference",
+  "primary_universe": "candidate_proteins_primary_250.tsv",
+  "primary_unordered_pairs": 31125,
+  "sensitivity_universe": "candidate_proteins_sensitivity_500.tsv",
+  "sensitivity_unordered_pairs": 124750,
+  "pair_orientation": "lexicographic UniProt accession",
+  "self_pairs_allowed": false,
+  "checkpoint": {
+    "path": "results/discovery_preprocess_v2/06_model_training/esm_only_adaptation_v1/triage_tuna_esm_only_adapted.pt",
+    "sha256": "87a161435023070443c675ebab3539268f9537a8a925f782d081061e1a853a56",
+    "weights_frozen": true,
+    "partial_state_loading_allowed": false,
+    "feature_policy": "ESM-only adapted on disease-independent TUnA partitions"
+  },
+  "inference": {
+    "symmetric": "evaluate A-B and B-A and average corresponding logits before sigmoid",
+    "primary_long_sequence_policy": "use residues 1..max_pair_len, matching the frozen training loader, and export truncation flags",
+    "long_sequence_sensitivity": "separately preregistered multi-window analysis; it cannot replace primary checkpoint-native inference",
+    "continuous_output": "p_PPI",
+    "OSA_specific_threshold_allowed": false,
+    "OSA_specific_recalibration_allowed": false
+  },
+  "isolation": {
+    "OSA_effects_read_during_inference": false,
+    "CPAP_or_external_validation_read_during_inference": false,
+    "known_PPI_or_pathway_read_during_inference": false,
+    "model_output_allowed_to_change_candidate_membership": false,
+    "model_output_allowed_to_change_pair_membership": false
+  },
+  "native_outputs": {
+    "scalar": "p_PPI, L1/L2/L3 logits and probabilities, T-MEB gates and contributions, reliability, order gaps",
+    "compact_evidence": "L1 residue profiles, L2-to-L1 projections, Top-K residues, Top-M interfaces, z_L1/z_L2/z_L3",
+    "dense_interface": "not stored for every pair; exactly regenerable from checkpoint, registry row and ESM inputs"
+  },
+  "diagnostic_innovations": {
+    "ranking_effect": "none",
+    "calibrated_probabilities": false,
+    "tri_level_consensus_diagnostic": "normalized agreement among p_L1, p_L2 and p_L3",
+    "T_MEB_gate_entropy_normalized": "how broadly T-MEB distributes reliance across L1/L2/L3",
+    "T_MEB_contribution_conflict": "cancellation among signed gate-logit contributions",
+    "order_stability_diagnostic": "stability of A-B versus B-A fused probabilities",
+    "L1_L2_projection_correlation": "agreement between L1 residue probabilities and residue projections of L2 interface logits",
+    "cross_level_coherence_diagnostic": "product diagnostic combining level agreement, low contribution conflict and order stability",
+    "interpretation": "model-internal evidence geometry only; not biological causality or uncertainty calibration"
+  },
+  "next_stage": "audit frozen primary p_PPI outputs, then construct r_OSA separately"
+}

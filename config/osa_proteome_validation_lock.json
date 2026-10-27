@@ -1,0 +1,85 @@
+{
+  "contract_version": "1.0.0",
+  "dataset": "PXD032734",
+  "role": "held_out_pediatric_serum_proteome_validation",
+  "selection_allowed": false,
+  "training_allowed": false,
+  "ranking_changes_allowed": false,
+  "source": {
+    "workbook": "PXD032734/supplementary/Table3.XLSX",
+    "workbook_sha256": "0d029225c68c8879dc3e207a93f5823aec2900c670de91edd567a6ec9f2ac55a",
+    "workbook_size": 229955,
+    "clinical_table": "PXD032734/supplementary/Table2.DOCX",
+    "clinical_table_sha256": "5206f00f6eecdfb0064f4fa6adb74b3eced090f623c5bb0a040729d96598781d",
+    "sheet": "Table S2",
+    "expected_rows": 754,
+    "expected_quantified_rows": 752,
+    "expected_columns": [
+      "Accession",
+      "Gene symbol",
+      "Description",
+      "Coverage [%]",
+      "# Peptides",
+      "# PSMs",
+      "# Unique Peptides",
+      "# AAs",
+      "MW [kDa]",
+      "calc. pI",
+      "Score ",
+      "# Razor Peptides",
+      "# Protein Groups",
+      "Modifications",
+      "A1",
+      "A2",
+      "A3",
+      "B1",
+      "B2",
+      "B3",
+      "C1",
+      "C2",
+      "C3",
+      "D1",
+      "D2",
+      "D3"
+    ]
+  },
+  "sample_groups": {
+    "A1": {"group": "non_OSA", "severity_ordinal": 0},
+    "A2": {"group": "non_OSA", "severity_ordinal": 0},
+    "A3": {"group": "non_OSA", "severity_ordinal": 0},
+    "B1": {"group": "mild_OSA", "severity_ordinal": 1},
+    "B2": {"group": "mild_OSA", "severity_ordinal": 1},
+    "B3": {"group": "mild_OSA", "severity_ordinal": 1},
+    "C1": {"group": "moderate_OSA", "severity_ordinal": 2},
+    "C2": {"group": "moderate_OSA", "severity_ordinal": 2},
+    "C3": {"group": "moderate_OSA", "severity_ordinal": 2},
+    "D1": {"group": "severe_OSA", "severity_ordinal": 3},
+    "D2": {"group": "severe_OSA", "severity_ordinal": 3},
+    "D3": {"group": "severe_OSA", "severity_ordinal": 3}
+  },
+  "preprocessing": {
+    "quantified_row_rule": "all_12_reporter_intensities_positive_finite",
+    "primary_scale": "log2_of_deposited_reporter_intensity",
+    "sensitivity_scale": "sample_median_centered_log2_reporter_intensity",
+    "protein_group_collapse": "none_in_preprocessing"
+  },
+  "statistics": {
+    "primary_node_effect": "linear_ordinal_severity_slope",
+    "secondary_node_effect": "severe_minus_non_OSA_mean_log2_difference",
+    "participant_label_permutations": 10000,
+    "random_seed": 32734,
+    "multiple_testing": "Benjamini-Hochberg"
+  },
+  "endpoint": {
+    "candidate_mapping": "exact_accession_else_gene_symbol_best_peptide_evidence",
+    "minimum_mapped_primary_nodes_for_pair_endpoint": 20,
+    "primary_pair_fraction": 0.01,
+    "coverage_comparator": "frozen_sensitivity_ranks_251_to_500",
+    "low_coverage_policy": "report_descriptive_node_evidence_and_mark_pair_endpoint_not_evaluable"
+  },
+  "sources": {
+    "article": "https://www.frontiersin.org/journals/molecular-biosciences/articles/10.3389/fmolb.2022.762336/full",
+    "proteomexchange": "https://proteomecentral.proteomexchange.org/cgi/GetDataset?ID=PXD032734",
+    "supplement_workbook": "https://public-pages-files-2025.frontiersin.org/articles/762336/file/Table3.XLSX/762336_supplementary-materials_tables_3_xlsx/1"
+  }
+}

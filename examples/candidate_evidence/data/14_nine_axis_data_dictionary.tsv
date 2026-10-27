@@ -1,0 +1,10 @@
+axis	raw_statistic_and_direction	normalization_and_aggregation	evaluability	support_rule
+CPAP GSE133601	Paired post−pre moderated t; reversal	Midrank → geometric mean	Both nodes mapped and eligible	Pair support > 0.5
+CPAP GSE49800	Paired post−pre moderated t; reversal	Midrank → geometric mean	Both nodes mapped and eligible	Pair support > 0.5
+Adipose state GSE135917	OSA−control moderated t; concordance	Midrank → geometric mean	Both nodes available for state and CPAP	Pair support > 0.5
+Adipose CPAP GSE135917	Paired post−pre moderated t; reversal	Midrank → geometric mean	Same eligible set as adipose state	Pair support > 0.5
+Single-cell GSE214865	OSA−control pseudobulk moderated t; concordance	Within-lineage midrank → geometric mean → mean over eligible lineages	≥1 of T/NK, B or myeloid with both nodes tested	Mean lineage support > 0.5
+Serum proteomics PXD032734	Primary ordinal-severity t multiplied by the archived adult OSA-axis score	No percentile transform; minimum of the two weighted t values	Both proteins detected	Minimum weighted t > 0
+Curated interactions	IntAct all/physical or ComplexPortal curated/experimental record	Binary union of pair-level references	All primary pairs queried	Any reference flag positive
+Visceral adipose GSE38792	OSA−control moderated t; concordance	Midrank → geometric mean	Both nodes available	Pair support > 0.5
+Adult GSE293433	OSA−control moderated t; concordance	Midrank → geometric mean	Both nodes pass primary assay filter	Pair support > 0.5

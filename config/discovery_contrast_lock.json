@@ -1,0 +1,141 @@
+{
+  "schema_version": "1.0",
+  "created_at_utc": "2026-07-15T00:00:00+00:00",
+  "amended_at_utc": "2026-07-15T06:00:00+00:00",
+  "amendment": {
+    "type": "statistical_implementation_correction_before_candidate_freeze",
+    "previous_lock_sha256": "4055cc64decc664878fbbfa0d36a82ee4280f5e2894dab815938631bd9923e04",
+    "reason": "The v1 audit showed that naive 5/95 clipping of log residual variances forced prior_df to the 1000000 boundary in several GSE71356 sensitivity analyses. Version 1.1 uses the standard un-winsorized log-variance method-of-moments estimator and retains ordinary OLS inference as an explicit diagnostic.",
+    "validation_data_used": false,
+    "candidate_selection_performed": false
+  },
+  "decision_basis": "Outcome-blind metadata and technical-QC audit completed before differential-expression outcomes were read.",
+  "minimum_python": "3.7",
+  "expression_unit": "reviewed canonical UniProt accession after locked probe-gene-protein mapping",
+  "multiple_testing": "Benjamini-Hochberg within each contrast",
+  "inference": {
+    "method": "ordinary least squares with limma-style empirical-Bayes residual-variance moderation",
+    "variance_prior_estimation": "standard un-winsorized log residual-variance method of moments",
+    "unmoderated_diagnostics": "retain ordinary OLS SE, t, two-sided P, and within-contrast BH-FDR beside moderated inference",
+    "prior_boundary_rule": "record prior_df_boundary; a boundary result is diagnostic-only and cannot create candidate-selection evidence",
+    "two_sided_tests": true,
+    "signed_score": "sign(beta) * -log10(raw two-sided P), capped at 300",
+    "missing_expression": "protein-wise complete finite observations; fail a contrast if design rank or residual degrees of freedom is insufficient",
+    "candidate_selection_uses_primary_only": true
+  },
+  "GSE75097": {
+    "primary_sample_set": "46 samples in sample_freeze.tsv with include_primary=yes",
+    "all_sample_sensitivity": "48 samples with include_sensitivity_all_48=yes",
+    "technical_batch_rule": "raw_array_label with the terminal position letter removed",
+    "sex_rule": "female=1, male=0",
+    "age_rule": "age_years/10; nuisance covariate only",
+    "bmi_rule": "excluded because BMI is completely missing",
+    "hypertension_eds_rule": "excluded from discovery models because they can be disease consequences or mediators",
+    "analysis_sets": {
+      "untreated_state": ["PS", "MSO", "VSO"],
+      "severe_state": ["PS", "VSO"],
+      "cpap_cross_sectional": ["VSO", "VSOC"]
+    },
+    "contrasts": [
+      {
+        "contrast_id": "GSE75097_OSA_state",
+        "priority": "primary",
+        "candidate_selection": true,
+        "sample_set": "primary",
+        "groups": ["PS", "MSO", "VSO"],
+        "design": "intercept + OSA_binary",
+        "estimand": "pooled untreated OSA (MSO+VSO) minus PS"
+      },
+      {
+        "contrast_id": "GSE75097_severe",
+        "priority": "primary",
+        "candidate_selection": true,
+        "sample_set": "primary",
+        "groups": ["PS", "VSO"],
+        "design": "intercept + VSO_binary",
+        "estimand": "VSO minus PS"
+      },
+      {
+        "contrast_id": "GSE75097_AHI",
+        "priority": "primary",
+        "candidate_selection": true,
+        "sample_set": "primary",
+        "groups": ["PS", "MSO", "VSO"],
+        "design": "intercept + AHI_per_10_events_per_hour",
+        "estimand": "expression change per 10 AHI events/hour"
+      },
+      {
+        "contrast_id": "GSE75097_ordinal",
+        "priority": "sensitivity",
+        "candidate_selection": false,
+        "sample_set": "primary",
+        "groups": ["PS", "MSO", "VSO"],
+        "design": "intercept + ordinal_group",
+        "estimand": "one-level increase with PS=0, MSO=1, VSO=2"
+      },
+      {
+        "contrast_id": "GSE75097_VSOC",
+        "priority": "secondary_no_selection",
+        "candidate_selection": false,
+        "sample_set": "primary",
+        "groups": ["VSO", "VSOC"],
+        "design": "intercept + VSOC_binary",
+        "estimand": "VSOC minus VSO; cross-sectional association, never called reversal"
+      }
+    ],
+    "sensitivities": [
+      "Repeat each eligible contrast with age_per_10y, female, and technical-batch fixed effects when the subset design is full rank.",
+      "Repeat OSA state, severe state, AHI, and ordinal models after restoring all 48 samples.",
+      "Sensitivity results cannot replace the registered primary estimate for candidate selection."
+    ]
+  },
+  "GSE71356": {
+    "primary_sample_set": "all 16 crossover assays from four participants",
+    "participant_sensitivity": "exclude the complete four-assay block for subject #403",
+    "primary_design": "intercept + subject fixed effects + IH + post_5h + IH:post_5h",
+    "contrasts": [
+      {
+        "contrast_id": "GSE71356_IH_x_time",
+        "priority": "primary",
+        "candidate_selection": true,
+        "estimand": "(IH_post-IH_pre) - (control_post-control_pre)"
+      },
+      {
+        "contrast_id": "GSE71356_IH_post_vs_pre",
+        "priority": "secondary",
+        "candidate_selection": false,
+        "estimand": "IH_post-IH_pre"
+      },
+      {
+        "contrast_id": "GSE71356_control_post_vs_pre",
+        "priority": "negative_control",
+        "candidate_selection": false,
+        "estimand": "control_post-control_pre"
+      },
+      {
+        "contrast_id": "GSE71356_IH_vs_control_post",
+        "priority": "secondary",
+        "candidate_selection": false,
+        "estimand": "IH_post-control_post"
+      }
+    ],
+    "detection_sensitivity": {
+      "primary_min_detected_samples": 2,
+      "alternative_min_detected_samples": [3, 4, 6, 8],
+      "aggregation": "rebuild gene and reviewed canonical UniProt matrices from the corresponding retained probe sets using the locked median-after-normalization rules",
+      "candidate_selection": false
+    }
+  },
+  "protein_context_evidence": {
+    "unit": "one reviewed canonical UniProt accession per row",
+    "primary_columns": [
+      "OSA state",
+      "very severe state",
+      "AHI continuous severity",
+      "IH exposure-by-time"
+    ],
+    "secondary_columns_are_reported_separately": true,
+    "validation_data_read": false,
+    "candidate_ranking_performed": false
+  }
+}

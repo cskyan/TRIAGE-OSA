@@ -1,0 +1,107 @@
+{
+  "schema_version": "1.0",
+  "created_at_utc": "2026-07-15T06:30:00+00:00",
+  "decision_basis": "Discovery-only Phase 4A v2 audit completed. No validation cohort, candidate identity list, L1-L2-L3 output, known PPI label, pathway label, or external evidence was used to choose this formula.",
+  "input": {
+    "stage": "results/discovery_preprocess_v2/04_discovery_v2",
+    "required_run_status": "all 30 contrasts PASS; all prior_df_boundary=false",
+    "protein_identifier": "reviewed canonical UniProt accession",
+    "eligible_universe": "proteins with complete primary GSE75097 OSA-state, severe-state, and AHI evidence",
+    "validation_data_allowed": false
+  },
+  "evidence_transform": {
+    "source_statistic": "moderated two-sided raw P from the registered primary contrast",
+    "strength": "midrank percentile of -log10(P) within the source-specific available protein universe: (average_rank - 0.5) / N",
+    "range": "open interval (0,1)",
+    "direction": "sign(beta) retained separately and never converted into one-sided significance",
+    "FDR_interpretation": "no primary source has FDR<0.05; selected proteins are evidence-prioritized candidates, not significant DE proteins"
+  },
+  "adult_OSA_axis": {
+    "formula": "0.50 * OSA_strength + 0.25 * severe_strength + 0.25 * AHI_strength",
+    "rationale": "OSA state is the primary disease anchor; severe state and continuous AHI form one severity branch and therefore jointly receive the other half rather than being triple-counted.",
+    "excluded_from_selection": [
+      "ordinal sensitivity",
+      "age/sex/chip-batch adjusted sensitivities",
+      "all-48 restored sensitivities",
+      "VSOC versus VSO"
+    ]
+  },
+  "IH_axis": {
+    "source": "GSE71356_IH_x_time registered primary interaction",
+    "available_strength": "IH_strength",
+    "missing_strength": 0.5,
+    "missing_interpretation": "neutral/no information, not zero evidence and not imputed biological support",
+    "excluded_from_selection": [
+      "exclude-subject-403 sensitivity",
+      "detection-threshold sensitivities",
+      "within-IH post versus pre",
+      "control post versus pre",
+      "IH versus control at post"
+    ]
+  },
+  "combined_discovery_score": {
+    "formula": "0.75 * adult_OSA_axis + 0.25 * IH_strength_or_neutral",
+    "weights": {
+      "adult_OSA_axis": 0.75,
+      "IH_axis": 0.25
+    },
+    "tie_breakers": [
+      "adult_OSA_axis descending",
+      "OSA_strength descending",
+      "UniProt accession ascending"
+    ],
+    "direction_coherence_is_selection_weight": false,
+    "sensitivity_results_are_selection_weights": false
+  },
+  "candidate_sets": {
+    "primary": {
+      "size": 250,
+      "file": "candidate_proteins_primary_250.tsv"
+    },
+    "sensitivity": {
+      "size": 500,
+      "file": "candidate_proteins_sensitivity_500.tsv",
+      "must_contain_primary": true
+    }
+  },
+  "audit_fields": {
+    "direction": [
+      "OSA_beta_sign",
+      "severe_beta_sign",
+      "AHI_beta_sign",
+      "IH_beta_sign",
+      "adult_three_way_direction_agreement",
+      "OSA_IH_direction_agreement_when_available"
+    ],
+    "stability_not_used_for_selection": [
+      "primary versus adjusted beta correlation/sign agreement",
+      "primary versus all-48 beta correlation/sign agreement",
+      "primary IH versus exclude-subject-403 correlation/sign agreement",
+      "primary IH versus detection-threshold correlation/sign agreement"
+    ]
+  },
+  "preliminary_matched_controls": {
+    "status": "preliminary_until_L1_L2_L3_and_network_assets_are_joined",
+    "candidate_reference": "primary 250",
+    "eligible_pool": "adult-eligible proteins outside sensitivity top 500",
+    "ratio": "1 control per primary candidate without replacement",
+    "method": "deterministic greedy nearest-neighbour in standardized covariates, processed by primary candidate rank",
+    "phase4_covariates": [
+      "GSE75097 primary state mean expression",
+      "protein detection fraction",
+      "log2 reviewed canonical protein length"
+    ],
+    "not_yet_available_and_required_before_final_model_comparison": [
+      "STRING/network degree",
+      "L1 sequence availability",
+      "L2 structure/interface availability",
+      "L3 context/model availability"
+    ]
+  },
+  "prohibited": [
+    "using CPAP, adipose, single-cell, proteome, known-PPI, pathway, or model outputs to alter candidate membership",
+    "calling the top 250 or 500 statistically significant proteins",
+    "changing weights after viewing validation enrichment",
+    "using preliminary controls as final controls before model-asset availability matching"
+  ]
+}

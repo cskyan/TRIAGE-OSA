@@ -1,0 +1,118 @@
+{
+  "lock_version": "1.0.0",
+  "locked_at_utc": "2026-07-15T00:00:00Z",
+  "validation_results_viewed_before_lock": false,
+  "dataset": "GSE135917",
+  "role": "held_out_cross_tissue_validation",
+  "selection_allowed": false,
+  "input_hashes": {
+    "GSE135917_series_matrix.txt.gz": "dc355d53b5b5207e86e39f63031745900c8f19eb11a9b0dbb0e6a75e92c79872",
+    "GSE135917_RAW.tar": "005a10b397a252108578c26bb0a64be5058c151068612d5a041568f453868fd7",
+    "GPL6244.annot.gz": "99ee70f87e02c75ff1c8dc57b6c40c0482c7ef2760e004301315ac34344ac6dc",
+    "sample_manifest.tsv": "ac911e17efcc41472b4d235bbf02d6758fe82a6f174b517df89c98e07a91bebd",
+    "candidate_proteins_primary_250.tsv": "90fd8420b22a4dbb155d7628858701a42c33bf70b76288322747ecb86030027d",
+    "pair_context_scores.tsv.gz": "a31c08f64930c9412cd2d6b0f568f235eb53d4150f6ecff4a343843c72e2cf8a"
+  },
+  "data_partition": {
+    "case_control": {
+      "study_group": "study_group_1_case_control",
+      "controls": 8,
+      "OSA": 10,
+      "assays": 18,
+      "design_primary": "intercept plus OSA indicator",
+      "contrast": "OSA minus control",
+      "covariate_sensitivity": "intercept plus OSA indicator plus age_per_10y plus male plus BMI_per_5",
+      "covariate_sensitivity_role": "secondary only; never used to select candidates, weights, thresholds, or the preferred result"
+    },
+    "paired_CPAP": {
+      "study_group": "study_group_2_paired_CPAP",
+      "subjects": 24,
+      "assays": 48,
+      "design_primary": "paired post minus pre equivalent to subject plus timepoint",
+      "contrast": "post_CPAP minus pre_CPAP",
+      "covariates": "none in the primary paired model; age and sex are time invariant, and BMI change may be on the treatment pathway"
+    }
+  },
+  "preprocessing": {
+    "primary_input": "GEO deposited series matrix",
+    "matrix_scale": "already log2 normalized; no further log2 transformation",
+    "matrix_observed_range_before_outcome_analysis": [2.015252, 14.88248],
+    "platform": "GPL6244 Affymetrix Human Gene 1.0 ST",
+    "feature_mapping": "retain probes with exactly one numeric GPL6244 Gene ID; aggregate multiple probes per Entrez by sample-wise median",
+    "raw_CEL_role": "optional technical sensitivity only",
+    "sample_exclusion": "all manifest primary_include=yes samples retained; technical outliers flagged but never removed after outcome inspection",
+    "cohort_matrices_may_be_merged": false
+  },
+  "protein_statistics": {
+    "primary_statistic": "limma-style empirical-Bayes moderated t using the same variance-prior implementation as discovery and CPAP validation",
+    "unmoderated_statistics_retained": true,
+    "multiple_testing": "BH-FDR within each contrast and mapped-feature universe",
+    "candidate_coverage_missingness": "unavailable candidates remain explicit and are never imputed"
+  },
+  "orientation": {
+    "discovery_direction": "sign of frozen GSE75097 OSA-control beta",
+    "case_control_oriented_beta": "sign(discovery_OSA_beta) times adipose_beta_OSA_minus_control",
+    "case_control_oriented_t": "sign(discovery_OSA_beta) times adipose_moderated_t",
+    "case_control_positive_interpretation": "same-direction OSA state signal across blood and adipose",
+    "CPAP_oriented_beta": "minus sign(discovery_OSA_beta) times adipose_beta_post_minus_pre",
+    "CPAP_oriented_t": "minus sign(discovery_OSA_beta) times adipose_moderated_t",
+    "CPAP_positive_interpretation": "adipose change opposite to the frozen blood OSA direction",
+    "node_score": "within-endpoint midrank percentile of oriented moderated t among measurable primary candidates"
+  },
+  "pair_endpoints": {
+    "eligibility": "both nodes measurable; retain the frozen 31,125-pair rank and never rerank after missingness",
+    "pair_support": "geometric mean of the two node scores",
+    "headline_top_fraction": 0.01,
+    "headline_top_count_in_frozen_universe": 312,
+    "fractions": [0.005, 0.01, 0.02, 0.05],
+    "primary_case_control": "top-1-percent same-direction adipose OSA-state support divided by all eligible-pair support",
+    "primary_paired_CPAP": "top-1-percent adipose CPAP-reversal support divided by all eligible-pair support",
+    "AUEC": "normalized trapezoidal area of top-minus-background support over frozen rank fractions 0.005 through 0.05",
+    "joint_secondary": "geometric mean of case-control and paired-CPAP node scores, summarized separately as cross-study triangulation",
+    "persistent_signal_secondary": "same-direction adipose OSA state with absent CPAP reversal; interpreted descriptively as persistence or residual-risk evidence, not as treatment failure"
+  },
+  "ranking_family": [
+    "OSA_interaction_priority_rank",
+    "rank_p_PPI",
+    "rank_r_OSA",
+    "rank_baseline_L3_only",
+    "rank_baseline_L1_L2",
+    "rank_baseline_L1_L3",
+    "rank_baseline_L2_L3",
+    "rank_baseline_equal_L1_L2_L3",
+    "rank_priority_PPI25_context75",
+    "rank_priority_PPI75_context25",
+    "rank_priority_bidirectional_conservative"
+  ],
+  "randomization": {
+    "formal_iterations": 10000,
+    "development_iterations": 1000,
+    "seed": 20260715,
+    "primary_node_aware": "permute complete node evidence vectors within deterministic blocks of 10 nearest nodes matched on frozen detection fraction and log2 protein length; keep the pair graph and frozen ranking unchanged",
+    "case_control_subject_aware": "randomly permute the 10 OSA and 8 control labels across all 18 complete participant expression vectors; recompute unmoderated node t and pair support",
+    "paired_CPAP_subject_aware": "apply one random sign to the complete post-minus-pre vector of each of 24 participants; recompute unmoderated node t and pair support",
+    "P_value": "(1 plus number of null statistics at least as large as observed) divided by (iterations plus 1)",
+    "validation_may_select_randomization_scheme": false
+  },
+  "multiplicity": {
+    "primary_cross_tissue_family": "case-control top-1-percent and paired-CPAP top-1-percent node-aware tests",
+    "primary_adjustment": "BH-FDR across the two cross-tissue primary tests",
+    "secondary_family": "AUEC, subject-aware tests, joint triangulation, baselines, covariate sensitivity, bottom-rank and opposite-direction controls",
+    "effect_sizes_and_null_intervals_required": true
+  },
+  "negative_controls": [
+    "bottom 1 percent of the frozen primary ranking",
+    "opposite-direction adipose OSA state",
+    "same-direction CPAP change rather than reversal",
+    "node-aware matched-block randomization",
+    "model order-gap and truncation strata reported without filtering"
+  ],
+  "prohibited": [
+    "changing candidate or pair membership",
+    "changing ranking weights, top fractions, endpoint orientation, covariates, or randomization after viewing GSE135917 effects",
+    "merging case-control and paired-CPAP expression matrices as one outcome model",
+    "using GSE135917 for training, calibration, threshold selection, checkpoint selection, or model selection",
+    "claiming physical PPI validation from transcript-level co-response",
+    "interpreting absent CPAP reversal as automatic evidence against a pair"
+  ]
+}

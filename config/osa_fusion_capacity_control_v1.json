@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0.0",
+  "analysis_name": "Structured conditioning versus equal-input generic fusion",
+  "source_suite": "results/discovery_preprocess_v2/31_osa_controlled_experiments_v1/osa_ablation_suite",
+  "pair_scores": "results/discovery_preprocess_v2/08_pair_inference_sensitivity_v1/pair_scores.tsv.gz",
+  "source_training_lock": "config/triage_osa_training_lock_v4.json",
+  "output_dir": "results/discovery_preprocess_v2/50_fusion_capacity_controls_v1",
+  "seeds": [20260716, 20260717, 20260718],
+  "common_objective": {"bce_weight": 1.0, "ranking_weight": 0.25, "minimum_ranking_target_gap": 0.10},
+  "common_optimization": {
+    "learning_rates": [0.0003, 0.001, 0.003],
+    "max_epochs": 120,
+    "patience": 20,
+    "minimum_improvement": 0.000001,
+    "batch_size": 2048,
+    "weight_decay": 0.0001,
+    "dropout": 0.10,
+    "gradient_clip": 5.0
+  },
+  "models": {
+    "Full": {"architecture": "structured", "objective": "common", "hidden_dim": 32},
+    "Concat_matched": {"architecture": "mlp", "objective": "common", "hidden_dim": 34, "residual_skip": false},
+    "Concat_warm": {"architecture": "mlp", "objective": "common", "hidden_dim": 34, "residual_skip": true},
+    "Concat_wide": {"architecture": "mlp", "objective": "common", "hidden_dim": 55, "residual_skip": false},
+    "Native_full": {"architecture": "structured", "objective": "archived_native", "hidden_dim": 32}
+  },
+  "model_selection": "Validation-protein discovery utility only; never test metrics, held-out participant anchors or external endpoints",
+  "final_refit": "Per model, maximize mean validation utility across all fold-seed units to select learning rate; median selected epoch at that rate; refit all discovery pairs for each of three seeds; arithmetic mean of probabilities",
+  "external": {"permutations": 10000, "participant_bootstrap": 5000, "scope": "existing two blood CPAP cohorts and existing adult tissue endpoints"},
+  "interpretation": "Post hoc mechanism/capacity comparison within the original discovery-selected universe. Full denotes common-objective structured architecture, not the archived manuscript checkpoint. Native_full is an unmatched-objective reference. No clinical prediction or guaranteed superiority."
+}

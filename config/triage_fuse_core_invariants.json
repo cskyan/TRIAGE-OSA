@@ -1,0 +1,64 @@
+{
+  "schema_version": "1.0",
+  "created_at_utc": "2026-07-15T08:30:00+00:00",
+  "paper_source": {
+    "title": "TRIAGE-Fuse: Bioinformatics-Guided Tri-Level Evidence Fusion for Traceable Protein Interaction Prediction",
+    "file": "TRIAGE-Fuse_IF_main_text_title_abstract_intro_methods_RESULTS_FINAL.pdf",
+    "pages_reviewed": [1, 3, 4, 5, 6, 7, 8, 9, 10, 15, 16, 18, 19, 25],
+    "core_method_sections": ["2.1", "2.2", "2.3.1", "2.3.2", "2.3.3", "2.4", "2.5", "2.6"]
+  },
+  "immutable_innovation": {
+    "problem_formulation": "protein interaction prediction as cross-resolution evidence fusion rather than a single opaque score",
+    "L1": "residue hotspot logits/probabilities, Top-K residue proposals and an L1 evidence vector/logit",
+    "L2": "L1-guided sparse residue-pair scoring, optional geometry bias, 2D refinement, Top-M support, an L2 evidence vector/logit and weak MIL linkage",
+    "L3": "attention-pooled chain summaries, difference/agreement pair context, optional structure summary and an L3 evidence vector/logit",
+    "cross_level_route": [
+      "L1-to-L2 residue proposal",
+      "L2-to-L1 interface projection consistency",
+      "L2-to-pair weak MIL/interface-pair consistency"
+    ],
+    "T_MEB": "sample-adaptive simplex gates over L1/L2/L3 evidence vectors with logit-level fusion before sigmoid",
+    "native_traceability": [
+      "residue hotspot profiles",
+      "Top-K residue indices",
+      "sparse Top-M interface supports",
+      "L1/L2/L3 evidence vectors and branch logits",
+      "T-MEB gate weights",
+      "diagnostic evidence-consistency readout"
+    ]
+  },
+  "equation_contract": {
+    "L1_guides_L2": "S0_ij = Sraw_ij + alpha*(p_res_A_i + p_res_B_j) + beta*G_ij",
+    "L2_sparse_support": "Top-M selected from the masked/refined interface-logit map and softmax-weighted into z_L2",
+    "L2_to_L1": "max sigmoid(interface logit) over the opposite chain",
+    "L2_MIL": "logsumexp(Top-M interface logits) - log(M)",
+    "gate": "g = softmax(W_g [z_L1 || z_L2 || z_L3] + b_g), g>=0, sum(g)=1",
+    "fusion": "logit_PPI = g_L1*logit_L1 + g_L2*logit_L2 + g_L3*logit_L3; sigmoid only after fusion",
+    "reliability": "diagnostic evidence-consistency readout; not calibrated uncertainty or causal evidence"
+  },
+  "OSA_allowed_adjustments": [
+    "strict checkpoint loading and provenance",
+    "canonical UniProt and feature-manifest input adapters",
+    "explicit missing-modality masks and availability tiers",
+    "explicit checkpoint-native sequence cropping",
+    "A-B/B-A bidirectional inference for unordered protein pairs",
+    "batched inference, caching and resumable output",
+    "post-model OSA context construction and ranking",
+    "additional diagnostics and integrity tests"
+  ],
+  "OSA_forbidden_adjustments": [
+    "removing or bypassing L1, L2, L3 or T-MEB in the full model",
+    "replacing L2 with a generic dense contact score or mean pooling in the primary model",
+    "probability averaging before T-MEB logit fusion",
+    "injecting OSA expression evidence into L1/L2/L3 representations or gates",
+    "calling r_OSA or the combined priority score a physical interaction probability",
+    "using CPAP/adipose/single-cell/proteome validation to select a checkpoint, feature policy, pair, threshold or weight",
+    "interpreting gate weights as causal biological effects",
+    "interpreting the reliability readout as calibrated uncertainty"
+  ],
+  "checkpoint_compatibility_note": {
+    "observed_base_implementation": "the archived model uses chain-specific A/B projection, encoder and residue-head modules",
+    "paper_alignment_for_frozen_OSA_inference": "preserve the trained checkpoint and evaluate both A-B and B-A; average scalar logits and align native residue/interface maps back to the original indexing",
+    "future_shared_weight_refactor": "requires a newly trained checkpoint and must be evaluated as a separate architecture version; it cannot be substituted into the frozen analysis"
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "schema_version": "1.0.0",
+  "analysis_name": "TRIAGE-OSA public-data tri-output multimodal experiment",
+  "scope": "public-data systems biology manuscript only",
+  "frozen_inputs": {
+    "ranking": "results/discovery_preprocess_v2/09_pair_context_ranking_triage_osa_v4/pair_context_scores_triage_osa_primary_250.tsv.gz",
+    "expression": "results/discovery_preprocess_v2/03_mapping/GSE75097/protein_expression_primary_samples.tsv.gz",
+    "patient_information": "metadata/discovery_patient_information.tsv",
+    "v4_training_summary": "results/discovery_preprocess_v2/06_model_training/triage_osa_patient_information_v4/run_summary.json"
+  },
+  "discovery_dataset": "GSE75097",
+  "expected_participants": 32,
+  "expected_primary_proteins": 250,
+  "expected_primary_pairs": 31125,
+  "profile_axes": ["OSA_state", "severity", "AHI", "hypertension", "EDS"],
+  "modalities": {
+    "structural": "frozen TRIAGE-Fuse L1-L2-L3 evidence aggregated to proteins",
+    "molecular": "participant-isolated OSA state, severity and AHI expression evidence",
+    "phenotype": "participant-isolated phenotype-specific expression evidence"
+  },
+  "profile_variants": [
+    "phenotype_expression_only",
+    "molecular_plus_phenotype",
+    "structural_plus_phenotype",
+    "full_tri_modal"
+  ],
+  "participant_isolation": "leave-one-participant-out; expression normalization, demographic adjustment and phenotype weights are fit without the held-out participant",
+  "demographic_adjustment": ["age", "sex"],
+  "missing_information_policy": {
+    "BMI": "unavailable and not imputed",
+    "cohort_summary_as_individual_value": false
+  },
+  "default_permutations": 10000,
+  "seed": 20260825,
+  "multi_axis_utility": {
+    "association_quality_weight": 0.50,
+    "structural_support_weight": 0.25,
+    "OSA_molecular_support_weight": 0.25,
+    "purpose": "test whether multimodal fusion balances phenotype association with structural and disease plausibility rather than maximizing association alone"
+  },
+  "claims": {
+    "physical_PPI_probability": false,
+    "clinical_diagnosis_probability": false,
+    "clinical_outcome_prediction": false,
+    "participant_mechanism_profile": true,
+    "exploratory_phenotype_association": true
+  },
+  "external_validation_used_for_training_or_selection": false,
+  "output_stage": "27_public_multimodal_experiments_v1"
+}

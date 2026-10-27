@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "created_at_utc": "2026-07-14T00:00:00+00:00",
+  "species": "Homo sapiens",
+  "taxonomy_id": 9606,
+  "hgnc": {
+    "snapshot_date": "2026-07-14",
+    "path": "annotations/hgnc_complete_set_20260714.tsv",
+    "sha256": "da14949c593bb28e9c136a636a0704d8892658c3b054a01cbccc53002e8e47ac",
+    "source_url": "https://storage.googleapis.com/public-download-files/hgnc/tsv/tsv/hgnc_complete_set.txt"
+  },
+  "uniprot": {
+    "release": "2026_02",
+    "release_date": "2026-06-10",
+    "snapshot_date": "2026-07-14",
+    "path": "annotations/uniprot_reviewed_human_2026_02.tsv.gz",
+    "sha256": "d2b2e25b5218b98a3c0150772f7ea269ab2938d4610e3e4a8356792d9bca5280",
+    "query": "(reviewed:true) AND (organism_id:9606)",
+    "source_url": "https://rest.uniprot.org/uniprotkb/stream"
+  },
+  "primary_rules": {
+    "multi_gene_probe": "exclude",
+    "probe_to_gene_resolution": "unique Entrez-to-HGNC first; approved/alias/previous symbol only when unique",
+    "multiple_probes_per_gene": "median_after_normalization",
+    "uniprot_universe": "reviewed canonical human UniProtKB accessions",
+    "multi_uniprot_gene": "resolve only if exactly one candidate matches the HGNC approved primary symbol; otherwise exclude",
+    "isoform": "canonical accession only; accession containing dash is excluded",
+    "unmapped_features": "retain in audit table and exclude from primary protein model"
+  }
+}

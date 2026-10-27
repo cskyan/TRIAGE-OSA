@@ -1,0 +1,5 @@
+# Preserve archived byte-level checksums across Git platforms.
+* -text
+*.png binary
+*.pdf binary
+*.zip binary

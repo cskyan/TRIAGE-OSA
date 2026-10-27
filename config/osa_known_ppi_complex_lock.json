@@ -1,0 +1,115 @@
+{
+  "schema_version": "1.1",
+  "created_utc": "2026-07-16T00:00:00Z",
+  "created_before_reference_labels_were_read": true,
+  "stage": "independent known-PPI and curated-complex recovery sanity check",
+  "pair_universe": {
+    "source": "results/discovery_preprocess_v2/09_pair_context_ranking_triage_osa_v3_2/pair_context_scores_triage_osa_primary_250.tsv.gz",
+    "sha256": "2dde9eee55064cdc2d1f1e3fce772d00c815b7f02eaf3014bca1d2a5b506944c",
+    "proteins": 250,
+    "unordered_nonself_pairs": 31125,
+    "membership_may_change": false,
+    "ranking_may_change": false
+  },
+  "references": {
+    "intact": {
+      "source": "IntAct PSICQUIC current service",
+      "query_url_template": "https://www.ebi.ac.uk/Tools/webservices/psicquic/intact/webservices/current/search/query/id:{accession}?format=tab25&firstResult={first}&maxResults={page_size}",
+      "page_size": 200,
+      "organism_taxid": "9606",
+      "require_both_primary_identifiers_uniprot": true,
+      "primary_interaction_type_mi": [
+        "MI:0195",
+        "MI:0407",
+        "MI:0556",
+        "MI:0915"
+      ],
+      "sensitivity_includes_all_positive_human_protein_pairs": true
+    },
+    "complex_portal": {
+      "source": "EMBL-EBI Complex Portal current human ComplexTab",
+      "url": "https://ftp.ebi.ac.uk/pub/databases/intact/complex/current/complextab/9606.tsv",
+      "organism_taxid": "9606",
+      "primary_evidence_codes": [
+        "ECO:0000353",
+        "ECO:0005543"
+      ],
+      "sensitivity_includes_all_curated_complexes": true,
+      "expand_complexes_to_unordered_component_pairs": true,
+      "exclude_homomer_self_pairs": true
+    }
+  },
+  "training_overlap_control": {
+    "tuna_shapes_relative_to_fourpack": "tuna.shapes.tsv",
+    "tuna_fasta_relative_to_fourpack": "tuna.seq.fasta",
+    "osa_fasta": "model_assets/osa_frozen_750_full.fasta",
+    "mapping": "direct FASTA identifier, exact uppercase amino-acid-sequence SHA-256, or exact full containment of a sequence of at least 40 amino acids",
+    "ambiguous_sequence_matches": "flag and conservatively treat every compatible TUnA pair as overlap",
+    "primary_endpoint_excludes_all_pairs_present_anywhere_in_TUnA_shapes": true,
+    "overlap_included_result": "sensitivity only"
+  },
+  "ranking_models": {
+    "full_OSA_priority": "triage_osa_rank_primary_250",
+    "context_free_p_PPI": "rank_p_PPI",
+    "context_only_r_OSA": "rank_r_OSA",
+    "L3_only": "rank_baseline_L3_only",
+    "L1_L2": "rank_baseline_L1_L2",
+    "L1_L3": "rank_baseline_L1_L3",
+    "L2_L3": "rank_baseline_L2_L3",
+    "equal_L1_L2_L3": "rank_baseline_equal_L1_L2_L3",
+    "PPI25_context75": "rank_priority_PPI25_context75",
+    "PPI75_context25": "rank_priority_PPI75_context25",
+    "bidirectional_conservative": "rank_priority_bidirectional_conservative"
+  },
+  "endpoints": {
+    "headline_fraction": 0.01,
+    "reported_fractions": [0.005, 0.01, 0.02, 0.05, 0.1],
+    "auec_min_fraction": 0.005,
+    "auec_max_fraction": 0.05,
+    "minimum_primary_reference_pairs_for_formal_endpoint": 10,
+    "primary_references": [
+      "IntAct_physical_training_excluded",
+      "ComplexPortal_experimental_training_excluded"
+    ],
+    "sensitivity_references": [
+      "IntAct_all_training_excluded",
+      "ComplexPortal_all_curated_training_excluded",
+      "IntAct_physical_overlap_included",
+      "ComplexPortal_experimental_overlap_included"
+    ]
+  },
+  "matched_control": {
+    "detectability_source": "results/discovery_preprocess_v2/04_candidates_v1/candidate_proteins_primary_250.tsv:protein_detection_fraction",
+    "detectability_source_sha256": "90fd8420b22a4dbb155d7628858701a42c33bf70b76288322747ecb86030027d",
+    "external_degree_quantile_bins": 5,
+    "detectability_quantile_bins": 3,
+    "length_quantile_bins": 3,
+    "endpoint": "mean percentile advantage of reference pairs over one matched non-reference pair per reference pair",
+    "fallback_order": [
+      "degree+detectability+length",
+      "degree+detectability",
+      "degree",
+      "universe"
+    ]
+  },
+  "permutation": {
+    "formal_iterations": 10000,
+    "development_iterations": 100,
+    "seed": 20260716,
+    "one_sided_alternative": "reference pairs rank higher than matched non-reference pairs",
+    "model_comparison": "paired null draws; full_OSA_priority advantage minus comparator advantage"
+  },
+  "interpretation": {
+    "known_ppi_or_complex_recovery_is_sanity_check_only": true,
+    "does_not_establish_osa_specific_physical_binding": true,
+    "does_not_change_candidates_or_pair_ranking": true,
+    "validation_data_used_for_training_or_selection": false
+  },
+  "prohibited": [
+    "changing reference filters after viewing recovery results",
+    "using IntAct or Complex Portal labels to rerank or filter OSA candidates",
+    "claiming known-PPI recovery as independent OSA validation",
+    "reporting training-overlap-inclusive recovery as the primary endpoint",
+    "selecting a ranking model from these sanity-check results"
+  ]
+}

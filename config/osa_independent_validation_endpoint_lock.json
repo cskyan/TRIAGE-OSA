@@ -1,0 +1,147 @@
+{
+  "lock_version": "1.0.0",
+  "locked_at_utc": "2026-08-08T16:10:00Z",
+  "status": "PRE_RESULT_ENDPOINT_LOCK",
+  "model": "TRIAGE_Fuse_OSA_specialized_v3_2_2",
+  "selection_allowed": false,
+  "outcome_access_disclosure": {
+    "candidate_or_pair_level_effects_computed_before_lock": false,
+    "model_ranking_applied_to_either_dataset_before_lock": false,
+    "public_GSE38792_summary_known": true,
+    "known_public_summary_findings": "NF-kB and ubiquitin/proteasome up; PPAR down in visceral adipose OSA",
+    "interpretation": "pathway directions are prespecified biological replication, while candidate-level and frozen-pair ranking endpoints remain pre-result"
+  },
+  "frozen_inputs": {
+    "preprocess_lock": {
+      "path": "config/osa_independent_validation_preprocess_lock.json",
+      "sha256": "b4056bc4e6a198a45c677964c2b7faee0760781f142c1a21e4a17be91e4c9e1f"
+    },
+    "reactome_gmt": {
+      "path": "annotations/independent_validation/ReactomePathways.gmt",
+      "sha256": "89983d5c1f0af11c52edfeee7323eb425580ac6281d387a528562ab1787ce56b",
+      "pathways": 2868
+    },
+    "reactome_manifest": {
+      "path": "annotations/independent_validation/reference_manifest.json",
+      "sha256": "e0cb332a6bbae880d416cf85fd9975f3340e5f2328def062646ab2bfb000e097"
+    },
+    "primary_ranking": {
+      "path": "results/discovery_preprocess_v2/09_pair_context_ranking_triage_osa_v3_2/pair_context_scores_triage_osa_primary_250.tsv.gz",
+      "sha256": "2dde9eee55064cdc2d1f1e3fce772d00c815b7f02eaf3014bca1d2a5b506944c",
+      "rank_field": "triage_osa_rank_primary_250",
+      "pairs": 31125
+    },
+    "candidate_universe": {
+      "path": "results/discovery_preprocess_v2/04_candidates_v1/candidate_proteins_primary_250.tsv",
+      "sha256": "90fd8420b22a4dbb155d7628858701a42c33bf70b76288322747ecb86030027d",
+      "proteins": 250
+    }
+  },
+  "orientation": {
+    "discovery_direction": "sign_of_frozen_GSE75097_OSA_beta",
+    "validation_oriented_t": "discovery_direction_times_validation_moderated_t_OSA_minus_control",
+    "positive_interpretation": "same_direction_OSA_state_signal",
+    "node_score": "midrank_percentile_of_validation_oriented_t_among_measurable_primary_candidates_within_dataset",
+    "missing_nodes": "explicitly_ineligible_never_imputed"
+  },
+  "pair_support": {
+    "eligibility": "both_nodes_measurable_in_the_dataset; retain_original_31125_pair_universe_and_rank",
+    "score": "geometric_mean_of_the_two_node_scores",
+    "top_fractions": [0.005, 0.01, 0.02, 0.05],
+    "headline_fraction": 0.01,
+    "top_set_definition": "top_fraction_of_the_full_frozen_31125_rank_before_missingness; evaluate_only_eligible_pairs_in_that_fixed_set",
+    "enrichment_ratio": "mean_pair_support_in_fixed_top_set_divided_by_mean_pair_support_among_all_eligible_pairs",
+    "AUEC": "normalized_trapezoidal_area_of_top_minus_background_support_over_the_four_fractions"
+  },
+  "primary_endpoint": {
+    "dataset": "GSE38792",
+    "endpoint": "V3.2.2_top_1_percent_pair_support_enrichment_in_visceral_adipose_OSA_state",
+    "test": "one_sided_node_aware_permutation",
+    "iterations": 10000,
+    "seed": 20260808
+  },
+  "secondary_endpoints": [
+    "GSE38792_AUEC",
+    "GSE293433_top_1_percent_pair_support_enrichment",
+    "GSE293433_AUEC",
+    "cross_cohort_joint_node_and_pair_support_geometric_mean",
+    "candidate_level_directional_concordance",
+    "Reactome_axis_competitive_enrichment",
+    "full_model_minus_comparator_top_1_percent_pair_support"
+  ],
+  "ranking_comparators": {
+    "full": "triage_osa_rank_primary_250",
+    "context_only": "rank_r_OSA",
+    "PPI_only": "rank_p_PPI",
+    "equal_L1_L2_L3": "rank_baseline_equal_L1_L2_L3",
+    "additional_sensitivity": [
+      "rank_baseline_L3_only",
+      "rank_baseline_L1_L2",
+      "rank_baseline_L1_L3",
+      "rank_baseline_L2_L3",
+      "rank_priority_PPI25_context75",
+      "rank_priority_PPI75_context25",
+      "rank_priority_bidirectional_conservative"
+    ],
+    "fusion_advantage_claim_gate": "full_model_must_show_positive_independent_disease_support_gain_over_context_only_and_retain_the_previously_locked_structural_gain_over_context_only; superiority_to_every_structural_baseline_is_not_required",
+    "no_selection": "no_comparator_may_be_chosen_or_dropped_after_results"
+  },
+  "reactome_axes": {
+    "hypoxia_HIF_ROS": {
+      "expected_direction": "up",
+      "stable_ids": ["R-HSA-1234174", "R-HSA-1234176", "R-HSA-1234158", "R-HSA-3299685"]
+    },
+    "NFkB_innate_inflammation": {
+      "expected_direction": "up",
+      "stable_ids": ["R-HSA-168898", "R-HSA-622312", "R-HSA-5607761", "R-HSA-9020702"]
+    },
+    "antigen_lymphocyte_signalling": {
+      "expected_direction": "two_sided",
+      "stable_ids": ["R-HSA-983169", "R-HSA-2132295", "R-HSA-202403", "R-HSA-983705"]
+    },
+    "PI3K_AKT_JAK_STAT_TGFb": {
+      "expected_direction": "two_sided",
+      "stable_ids": ["R-HSA-109704", "R-HSA-1257604", "R-HSA-8950505", "R-HSA-170834"]
+    },
+    "proteostasis_ER_stress": {
+      "expected_direction": "up_in_GSE38792_two_sided_in_GSE293433",
+      "stable_ids": ["R-HSA-9907900", "R-HSA-8852135", "R-HSA-5688426", "R-HSA-381119"]
+    },
+    "PPAR_adipose_lipid_metabolism": {
+      "expected_direction": "down_in_GSE38792_two_sided_in_GSE293433",
+      "stable_ids": ["R-HSA-9843745", "R-HSA-400206", "R-HSA-8978868", "R-HSA-191273"]
+    }
+  },
+  "pathway_statistics": {
+    "pathway_score": "mean_moderated_t_of_measurable_genes_in_pathway_minus_mean_moderated_t_of_other_tested_genes",
+    "axis_score": "same_competitive_difference_using_the_union_of_the_four_locked_pathways",
+    "minimum_measurable_genes_per_pathway": 5,
+    "minimum_measurable_genes_per_axis": 15,
+    "null": "10000_gene_label_permutations_matched_on_set_size",
+    "seed": 20260808,
+    "reporting": "effect_size_nominal_P_and_BH_FDR; public_summary_replications_labelled_as_prespecified_not_novel"
+  },
+  "randomization": {
+    "pair_primary": "permute_complete_node_evidence_vectors_within_deterministic_blocks_of_10_nearest_nodes_matched_on_frozen_detection_fraction_and_log2_protein_length; keep_pair_graph_and_all_rankings_fixed",
+    "iterations": 10000,
+    "seed": 20260808,
+    "P_value": "(1_plus_null_statistics_at_least_as_large_as_observed)_divided_by_(iterations_plus_1)",
+    "GSE293433_label_sensitivity": "all_252_unique_five_of_ten_group_assignments_for_candidate_level_statistics",
+    "GSE38792_label_sensitivity": "all_43758_unique_ten_of_eighteen_group_assignments_for_candidate_level_statistics"
+  },
+  "multiplicity": {
+    "primary_family": "one_prespecified_GSE38792_full_model_top_1_percent_test",
+    "model_comparator_family": "BH_FDR_across_context_only_PPI_only_and_equal_L1_L2_L3_deltas",
+    "pathway_family": "BH_FDR_across_six_axes_within_each_dataset",
+    "all_other_endpoints": "secondary_or_sensitivity_with_effect_sizes_and_null_intervals"
+  },
+  "prohibited": [
+    "changing_model_candidate_or_pair_membership",
+    "reranking_or_retraining_after_independent_results",
+    "changing_pathway_IDs_directions_top_fractions_or_comparators",
+    "calling_publicly_known_GSE38792_pathway_directions_novel",
+    "using_pathway_results_as_training_labels",
+    "claiming_physical_binding_from_transcript_co_response",
+    "claiming_universal_fusion_superiority_if_only_the_prespecified_Pareto_gate_passes"
+  ]
+}

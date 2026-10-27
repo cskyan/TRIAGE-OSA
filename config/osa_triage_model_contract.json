@@ -1,0 +1,121 @@
+{
+  "schema_version": "1.1",
+  "created_at_utc": "2026-07-15T07:00:00+00:00",
+  "core_invariants": "config/triage_fuse_core_invariants.json",
+  "baseline": {
+    "source": "resources/backbone",
+    "provenance_snapshot": "model/triage_base",
+    "runtime_snapshot": "model/triage_server_candidate",
+    "source_manifest": "model/triage_server_candidate/source_manifest.json",
+    "levels": {
+      "L1": "residue evidence: logit_res and p_res_A/p_res_B",
+      "L2": "interface evidence: logit_interface and S_interface/top-M contacts",
+      "L3": "global pair evidence: logit_pair_raw and p_pair_raw",
+      "fusion": "gated logit_triage / p_triage"
+    }
+  },
+  "physical_interaction_output": {
+    "name": "p_PPI",
+    "source": "frozen TRIAGE p_triage",
+    "symmetric_inference": "run A-B and B-A; average each branch logit; apply sigmoid after logit averaging",
+    "required_exports": [
+      "p_PPI",
+      "p_L1",
+      "p_L2",
+      "p_L3",
+      "g_L1",
+      "g_L2",
+      "g_L3",
+      "contribution_L1",
+      "contribution_L2",
+      "contribution_L3",
+      "T_MEB_reconstruction_error",
+      "evidence_reliability",
+      "p_residue_A",
+      "p_residue_B",
+      "topk_residue_A_indices",
+      "topk_residue_B_indices",
+      "topm_interface_indices",
+      "topm_interface_probabilities",
+      "L2_to_L1_projection_A",
+      "L2_to_L1_projection_B",
+      "L2_MIL_probability",
+      "AB_BA_probability_gap",
+      "feature_availability_tier",
+      "checkpoint_sha256"
+    ],
+    "dense_interface_policy": "S_interface is an exact on-demand output, not a mandatory all-pair stored artifact; the frozen checkpoint, registry row, ESM arrays and inference contract are sufficient to regenerate it, while Top-M interfaces and L2-to-L1 projections are retained for every pair",
+    "calibration_rule": "do not recalibrate on OSA discovery or validation; use a calibration frozen on disease-independent PPI data only",
+    "threshold_rule": "rank all pairs continuously; no OSA-specific binary threshold"
+  },
+  "traceability": {
+    "native_L1_L2_L3_outputs_required": true,
+    "T_MEB_exact_contribution_identity_required": true,
+    "gate_simplex_tolerance": 1e-05,
+    "T_MEB_reconstruction_tolerance": 1e-05,
+    "reliability_interpretation": "diagnostic evidence consistency only; not calibrated uncertainty",
+    "gate_interpretation": "sample-specific model-internal evidence reliance; not causal biology"
+  },
+  "checkpoint": {
+    "config_source": "checkpoint config",
+    "partial_load_allowed": false,
+    "missing_keys_allowed": false,
+    "unexpected_keys_allowed": false,
+    "shape_mismatch_allowed": false,
+    "must_record": [
+      "path",
+      "sha256",
+      "stage",
+      "epoch",
+      "best_metric",
+      "feature_spec",
+      "model_state_key_count"
+    ]
+  },
+  "features": {
+    "expected_d_res_in": 1309,
+    "expected_layout": "ESM2-650M 1280 + PSSM 20 + DSSP SS8/RSA 9",
+    "ESM_required": true,
+    "PSSM_policy": "checkpoint-dependent; complete matched coverage is required when enabled in the selected checkpoint unless a disease-independent ESM-only/feature-dropout checkpoint is trained and frozen",
+    "DSSP_policy": "checkpoint-dependent; complete matched coverage is required when enabled in the selected checkpoint unless a disease-independent ESM-only/feature-dropout checkpoint is trained and frozen",
+    "coordinates_optional_but_stratified": true,
+    "silent_zero_fill_allowed": false,
+    "explicit_missing_PSSM_DSSP_fill": "zero only with per-protein availability tier exported and tier-matched controls",
+    "explicit_missing_coordinates": "NaN/missing state with availability exported",
+    "silent_N_terminal_truncation_allowed": false,
+    "primary_max_length_policy": "explicitly crop every protein to residues 1..checkpoint max_pair_len, reproducing the frozen checkpoint training loader; export full length, used length and truncation flag",
+    "primary_policy_reason": "the disease-independent base model was trained with deterministic N-terminal truncation, so changing aggregation in the primary analysis would alter its estimand",
+    "multi_window_sensitivity": "allowed only as a separately registered sensitivity analysis after checkpoint audit; it may not replace the checkpoint-native primary result",
+    "length_and_tier_matching_required_for_final_controls": true,
+    "feature_adaptation_training_data": "original disease-independent PPI/interface training partitions only; no OSA, CPAP or external validation outcomes",
+    "availability_tiers": [
+      "ESM+PSSM+DSSP+coords",
+      "ESM+PSSM+DSSP",
+      "ESM+PSSM",
+      "ESM_only",
+      "unavailable"
+    ]
+  },
+  "OSA_context": {
+    "candidate_files_frozen_before_model_read": true,
+    "p_PPI_and_r_OSA_reported_separately": true,
+    "OSA_context_may_modify_L1_or_L2": false,
+    "OSA_context_may_enter_checkpoint": false,
+    "initial_mode": "disease-independent TUnA missing-modality adaptation followed by frozen OSA inference",
+    "fine_tuning_status": "OSA fine-tuning forbidden; one TUnA-only ESM/no-structure feature-domain adaptation is authorized and must be frozen before OSA inference",
+    "combined_score_name": "OSA interaction-priority score",
+    "combined_score_is_physical_interaction_probability": false
+  },
+  "pair_sets": {
+    "primary_250_max_pairs": 31125,
+    "sensitivity_500_max_pairs": 124750,
+    "unordered": true,
+    "self_pairs": false
+  },
+  "validation_isolation": {
+    "CPAP_or_external_data_allowed_for_checkpoint_selection": false,
+    "CPAP_or_external_data_allowed_for_feature_policy_selection": false,
+    "CPAP_or_external_data_allowed_for_pair_filtering": false,
+    "known_PPI_allowed_for_sanity_check_only": true
+  }
+}

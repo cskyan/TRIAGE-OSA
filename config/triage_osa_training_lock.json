@@ -1,0 +1,86 @@
+{
+  "schema_version": "2.0",
+  "locked_at": "2026-07-16",
+  "analysis_name": "TRIAGE-Fuse OSA-specialized continuation training",
+  "purpose": "Continue the pretrained TRIAGE-Fuse model with an OSA-conditioned T-MEB specialization while preserving the L1-L2-L3 protein-interaction backbone.",
+  "base_model": {
+    "checkpoint": "results/discovery_preprocess_v2/06_model_training/esm_only_adaptation_v1/triage_tuna_esm_only_adapted.pt",
+    "checkpoint_sha256": "87a161435023070443c675ebab3539268f9537a8a925f782d081061e1a853a56",
+    "frozen_components": [
+      "L1 residue branch",
+      "L2 interface branch",
+      "L3 global branch",
+      "T-MEB base gates",
+      "all protein encoders"
+    ]
+  },
+  "allowed_training_data": [
+    "GSE75097 frozen primary discovery samples",
+    "GSE71356 frozen primary IH crossover samples",
+    "disease-independent frozen TRIAGE pair outputs"
+  ],
+  "forbidden_training_or_selection_data": [
+    "GSE133601",
+    "GSE49800",
+    "GSE135917",
+    "GSE214865",
+    "PXD032734",
+    "IntAct",
+    "ComplexPortal",
+    "all Stage 10-19 endpoints"
+  ],
+  "universe": {
+    "formal": "sensitivity_500",
+    "formal_proteins": 500,
+    "formal_pairs": 124750,
+    "primary_report_subset": "primary_250",
+    "candidate_membership_may_change": false
+  },
+  "cross_validation": {
+    "folds": 4,
+    "GSE75097": "deterministic stratified leave-one-fold-out context construction within PS, MSO and VSO",
+    "GSE71356": "leave-one-subject-out context construction across the four crossover subjects; a one-subject effect is never used as the validation or test gold standard",
+    "protein_split": "deterministic accession-hash folds",
+    "train_val_test": "train, validation and test pairs are protein-disjoint; each outer fold builds all weak targets from the approximately three-quarter development participants only, while the held-out participant fold is used solely for direction/stability audit",
+    "external_validation_used": false
+  },
+  "trainable_innovation": {
+    "context_conditioned_tri_level_gate": true,
+    "reliability_aware_residual": true,
+    "symmetric_pair_context": true,
+    "base_PPI_retention_distillation": true,
+    "weak_supervision": "continuous discovery-only pair priority derived from fold-specific OSA severity and IH node evidence",
+    "physical_PPI_probability_claim": false
+  },
+  "optimization": {
+    "seed": 20260716,
+    "hidden_dimension": 32,
+    "dropout": 0.10,
+    "batch_size": 2048,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "max_epochs": 60,
+    "patience": 10,
+    "bce_weight": 1.0,
+    "ranking_weight": 0.25,
+    "PPI_retention_weight": 0.10,
+    "gate_drift_weight": 0.02,
+    "minimum_ranking_target_gap": 0.10
+  },
+  "checkpoint_selection": "validation soft-label BCE and rank correlation on a protein-disjoint validation partition; all fold targets are constructed only from development participants, and held-out participants are stability audits rather than gold labels",
+  "performance_gate": {
+    "minimum_delta_test_Spearman_vs_frozen_PPI": 0.05,
+    "minimum_delta_test_weak_top20_AUPRC_vs_frozen_PPI": -0.01,
+    "minimum_test_top5_enrichment_ratio": 1.0,
+    "failed_checkpoint_is_selection_eligible": false
+  },
+  "final_epoch_rule": "median cross-validation best epoch; fixed before fitting all discovery data",
+  "required_outputs": [
+    "triage_osa_specialized.pt",
+    "cross_validation_metrics.tsv",
+    "participant_context_stability.tsv",
+    "fold_assignments.tsv",
+    "training_contract.json",
+    "run_summary.json"
+  ]
+}

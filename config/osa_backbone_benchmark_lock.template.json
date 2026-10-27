@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0.0",
+  "exposure_audit_complete": false,
+  "exposure_audit_note": "TEMPLATE ONLY. Do not mark complete until all original and ESM adaptation training/model-selection exposures are accounted for. A public dataset name alone does not establish independence.",
+  "original_checkpoint": "resources/backbone/triage_runs/tuna_from_engineering/triage_tuna_pair_finetuned.pt",
+  "l2_support_sensitivity": true,
+  "exposure_manifests": [
+    {"phase": "original_training", "path": "metadata/benchmark_exposure/original_training.tsv"},
+    {"phase": "original_selection", "path": "metadata/benchmark_exposure/original_selection.tsv"},
+    {"phase": "esm_adaptation_training", "path": "metadata/benchmark_exposure/esm_adaptation_training.tsv"},
+    {"phase": "esm_adaptation_selection", "path": "metadata/benchmark_exposure/esm_adaptation_selection.tsv"}
+  ],
+  "datasets": [],
+  "dataset_spec_examples_NOT_EXECUTED": [
+    {
+      "name": "locked_pair_holdout",
+      "type": "pair_fourpack",
+      "directory": "REPLACE_WITH_AUDITED_FOURPACK_DIRECTORY",
+      "esm_dir": "REPLACE_WITH_FULL_LENGTH_ESM_DIRECTORY",
+      "test_ids_tsv": "metadata/benchmark_exposure/pair_test_ids.tsv",
+      "canonical_id_map_tsv": "metadata/benchmark_exposure/canonical_protein_ids.tsv",
+      "canonical_id_audit_note": "REPLACE: document common accession/sequence-cluster IDs across ALL exposures and tests; state homology limits."
+    },
+    {
+      "name": "locked_residue_holdout",
+      "type": "site_global",
+      "directory": "REPLACE_WITH_AUDITED_SITE_GLOBAL_DIRECTORY",
+      "esm_dir": "REPLACE_WITH_FULL_LENGTH_ESM_DIRECTORY",
+      "test_ids_tsv": "metadata/benchmark_exposure/residue_test_ids.tsv",
+      "canonical_id_map_tsv": "metadata/benchmark_exposure/canonical_protein_ids.tsv",
+      "canonical_id_audit_note": "REPLACE: document PDB-chain to common protein/sequence-cluster mapping; state homology limits.",
+      "contact_index_base": 1
+    }
+  ]
+}
