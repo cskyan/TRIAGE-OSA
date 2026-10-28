@@ -29,8 +29,8 @@ checkpoints/
 *.tar
 *.tar.gz
 tmp/
-!source_data/Supplementary_Data_1_Candidate_Evidence.zip
-!source_data/Supplementary_Data_2_Analysis_Outputs.zip
+!source_data/Candidate_evidence.zip
+!source_data/Analysis_outputs.zip
 !examples/candidate_evidence/data/
 !examples/candidate_evidence/data/**
 !plotting/data/

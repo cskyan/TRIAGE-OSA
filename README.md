@@ -1,6 +1,6 @@
 # TRIAGE-OSA
 
-**TRIAGE-OSA: structured multiscale evidence fusion for protein-pair prioritization in obstructive sleep apnoea**
+**TRIAGE-OSA prioritizes protein pairs in obstructive sleep apnoea through multiscale evidence integration**
 
 TRIAGE-OSA integrates multiscale protein-pair outputs with OSA-associated expression evidence to prioritize candidate pairs. This repository contains the molecular model, disease-specialization code, controlled experiments, external evidence analyses, and plotting workflows.
 
@@ -29,7 +29,7 @@ plotting/
 examples/candidate_evidence/   Complete 15-edge candidate example
 tests/                         Regression tests using explicit test fixtures
 tools/                         Repository integrity checks
-source_data/                   Supplementary Data 1 and 2, checksums and file guide
+source_data/                   Candidate evidence, analysis outputs and file guide
 ```
 
 ## Quick start: one complete example
@@ -82,10 +82,10 @@ The two manuscript source-data archives are included under [`source_data/`](sour
 
 | Archive | Contents |
 |---|---|
-| [Supplementary Data 1: Candidate Evidence](source_data/Supplementary_Data_1_Candidate_Evidence.zip) | Complete 31,125-pair evidence matrix; rankings and stability; original candidates and modules; alternative selection rules; per-candidate assay evidence and source records. |
-| [Supplementary Data 2: Analysis Outputs](source_data/Supplementary_Data_2_Analysis_Outputs.zip) | Matched external controls; fusion-capacity controls; candidate-stability and public-evidence analyses; complete archived L1 profiles, sparse L2 support and structural mappings. |
+| [Candidate evidence](source_data/Candidate_evidence.zip) | Complete 31,125-pair evidence matrix; rankings and stability; original candidates and modules; alternative selection rules; per-candidate assay evidence and source records. |
+| [Analysis outputs](source_data/Analysis_outputs.zip) | Matched external controls; fusion-capacity controls; candidate-stability and public-evidence analyses; complete archived L1 profiles, sparse L2 support and structural mappings. |
 
-The [source-data guide](source_data/README.md) describes extraction, checksums and how to regenerate the fusion-control plot directly from archived results. Public copies normalize machine-specific provenance paths and translate one README; numerical tables and arrays are unchanged. The in-archive manifests distinguish original and distributed hashes. These archives complement the Supplementary Information; they do not contain model checkpoints.
+The [source-data guide](source_data/README.md) describes the experiment groups, extraction and how to regenerate the fusion-control plot directly from archived results. The archives organize derived tables and arrays by analysis and complement the Supplementary Information. They do not contain model checkpoints.
 
 The default data workspace is the repository root, with ignored `geo/`, `annotations/`, `metadata/`, `raw/`, `resources/`, and `results/` directories. An existing data workspace can also be used:
 
@@ -221,7 +221,7 @@ All plotting code is collected under `plotting/figures/` and selected through `p
 |---|---|
 | `candidate` | Bundled 15-edge candidate example |
 | `benchmark` | Bundled benchmark/ablation JSON and control TSV |
-| `fusion-capacity` | `Fusion_Control_Source_Data/` from Supplementary Data 2 |
+| `fusion-capacity` | `fusion_controls/` from `Analysis_outputs.zip` |
 | `published` | Archived Stage 36 v2 comparisons |
 | `bio` | Biological-analysis results and metadata |
 | `coverage` | Cohort metadata and coverage outputs |
